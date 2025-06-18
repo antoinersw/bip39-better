@@ -917,46 +917,7 @@ func computeChecksumFast(entropy256 *big.Int) int {
 	return int(hash[0])
 }
 
-// Version de backup (garde l'ancienne pour compatibilité)
-func isValidMnemonicBitsOld(phrase23Bits []int, checksumBits int) bool {
-	if len(phrase23Bits) != 23 {
-		return false
-	}
-
-	// Convert bits to big integer (23 words + 1 checksum word = 264 bits total)
-	mnemonicBig := new(big.Int)
-
-	// Add 23 words (253 bits)
-	for _, wordBits := range phrase23Bits {
-		mnemonicBig.Lsh(mnemonicBig, 11)
-		mnemonicBig.Add(mnemonicBig, big.NewInt(int64(wordBits)))
-	}
-
-	// Add checksum word (11 bits)
-	mnemonicBig.Lsh(mnemonicBig, 11)
-	mnemonicBig.Add(mnemonicBig, big.NewInt(int64(checksumBits)))
-
-	// For 24 words: 8 checksum bits (256 entropy bits + 8 checksum bits = 264 total bits)
-	checksumBitCount := 8
-	checksum := new(big.Int)
-	entropy := new(big.Int)
-	entropy.DivMod(mnemonicBig, big.NewInt(1<<checksumBitCount), checksum)
-
-	// Get entropy bytes (should be 32 bytes for 256 bits)
-	entropyBytes := entropy.Bytes()
-
-	// Pad to exactly 32 bytes if necessary
-	if len(entropyBytes) < 32 {
-		padded := make([]byte, 32)
-		copy(padded[32-len(entropyBytes):], entropyBytes)
-		entropyBytes = padded
-	} else if len(entropyBytes) > 32 {
-		entropyBytes = entropyBytes[len(entropyBytes)-32:]
-	}
-
-	expectedChecksum := computeChecksum(entropyBytes)
-	return checksum.Cmp(expectedChecksum) == 0
-}
+ 
 
 func deriveSeed(mnemonic, password string) []byte {
 	return pbkdf2.Key(
@@ -1061,7 +1022,17 @@ func formatMemory(bytes uint64) string {
 }
 
 func performanceLogger() {
-	ticker := time.NewTicker(1 * time.Minute) // Logging toutes les minutes
+	// Ajuster la fréquence du logging selon le volume
+	var logInterval time.Duration
+	if totalCombinations > 100000000 {
+		logInterval = 30 * time.Second // Plus fréquent pour gros volumes
+	} else if totalCombinations > 1000000 {
+		logInterval = 45 * time.Second
+	} else {
+		logInterval = 1 * time.Minute
+	}
+
+	ticker := time.NewTicker(logInterval)
 	defer ticker.Stop()
 
 	for range ticker.C {
@@ -1434,8 +1405,14 @@ func generateAllCombinations(workChan chan<- WorkItem, reverseWords map[string]i
 
 			select {
 			case workChan <- workItem:
-			case <-time.After(500 * time.Millisecond):
-				// Si le canal est plein, on attend un peu plus longtemps
+			case <-time.After(100 * time.Millisecond):
+				// Si le canal est plein, timeout plus court pour éviter les blocages
+				select {
+				case workChan <- workItem:
+				default:
+					// Canal toujours plein, forcer l'envoi (peut bloquer brièvement)
+					workChan <- workItem
+				}
 			}
 			return
 		}
@@ -1763,20 +1740,74 @@ func runMainProcessing(reverseWords map[string]int) error {
 
 	// Configuration optimisée des workers avec canal plus large
 	numCPU := runtime.NumCPU()
-	numWorkers := numCPU
-	if totalCombinations > 1000000 {
-		// Pour de gros volumes, utiliser plus de workers mais pas trop
-		numWorkers = numCPU * 2
+
+	// Optimisation intelligente du nombre de workers basée sur le volume
+	var numWorkers int
+	if totalCombinations < 10000 {
+		// Petit volume: utiliser moins de workers pour éviter l'overhead
+		numWorkers = int(min(int64(numCPU/2), int64(4)))
+		if numWorkers < 1 {
+			numWorkers = 1
+		}
+	} else if totalCombinations < 1000000 {
+		// Volume moyen: utiliser le nombre de CPU
+		numWorkers = numCPU
+	} else if totalCombinations < 100000000 {
+		// Gros volume: utiliser 1.5x CPU pour maximiser l'utilisation
+		numWorkers = int(float64(numCPU) * 1.5)
+	} else {
+		// Très gros volume: limiter à 1.2x CPU pour éviter la contention
+		numWorkers = int(float64(numCPU) * 1.2)
 	}
 
-	// Canal plus large avec batch processing
-	channelSize := int(min(100000, totalCombinations/int64(numWorkers)*10))
-	if channelSize < 1000 {
-		channelSize = 1000
+	// Limiter absolument le nombre de workers pour éviter la contention
+	maxWorkers := numCPU * 2
+	if numWorkers > maxWorkers {
+		numWorkers = maxWorkers
+	}
+
+	// Canal optimisé pour éviter la contention
+	var channelSize int
+	if totalCombinations < 10000 {
+		// Petit volume: canal plus petit
+		channelSize = int(min(1000, totalCombinations/4))
+		if channelSize < 100 {
+			channelSize = 100
+		}
+	} else if totalCombinations < 1000000 {
+		// Volume moyen: canal standard
+		channelSize = int(min(10000, totalCombinations/int64(numWorkers)*5))
+		if channelSize < 1000 {
+			channelSize = 1000
+		}
+	} else {
+		// Gros volume: canal plus large mais limité
+		channelSize = int(min(50000, totalCombinations/int64(numWorkers)*3))
+		if channelSize < 5000 {
+			channelSize = 5000
+		}
 	}
 
 	fmt.Printf("🧵 Utilisation de %d workers sur %d cores CPU\n", numWorkers, numCPU)
 	fmt.Printf("📦 Taille du canal: %d (optimisé pour %s combinaisons)\n", channelSize, formatNumber(totalCombinations))
+
+	// Diagnostics de performance
+	workerRatio := float64(numWorkers) / float64(numCPU)
+	if workerRatio > 2.0 {
+		fmt.Printf("⚠️ Attention: Ratio workers/CPU élevé (%.1fx) - risque de contention\n", workerRatio)
+	}
+
+	if totalCombinations > 100000000 {
+		fmt.Printf("🔥 Volume très élevé détecté - optimisations activées\n")
+	}
+
+	fmt.Printf("🗑️ GC configuré à %d%% pour ce mode\n", debug.SetGCPercent(-1))
+	debug.SetGCPercent(100) // Restore the setting
+	if *jsonDirFlag != "" {
+		debug.SetGCPercent(100)
+	} else {
+		debug.SetGCPercent(50)
+	}
 	fmt.Println()
 
 	// Démarrer le logger de performance en arrière-plan
@@ -2040,7 +2071,15 @@ func main() {
 
 	// Optimisations de performance
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	debug.SetGCPercent(50) // GC plus agressif pour éviter l'accumulation
+
+	// Optimisation GC basée sur le mode
+	if *jsonDirFlag != "" {
+		// Mode JSON avec gros volumes: GC moins agressif pour éviter les pauses
+		debug.SetGCPercent(100)
+	} else {
+		// Mode normal: GC plus agressif
+		debug.SetGCPercent(50)
+	}
 
 	// Initialiser la map pour tracker les phrases high score déjà sauvegardées
 	savedHighScores = make(map[string]bool)
