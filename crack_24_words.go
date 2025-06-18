@@ -11,6 +11,7 @@ import (
 	"log"
 	"math/big"
 	"os"
+	"path/filepath"
 	"runtime"
 	"runtime/debug"
 	"sort"
@@ -73,6 +74,7 @@ var (
 	wordTarget            = flag.String("word_target", "", "Target checksum word to validate (for bit optimization)")
 	wordValid             = flag.String("word_valid", "", "Comma-separated list of words that must remain valid")
 	basePhraseFlag        = flag.String("phrase", "", "Base phrase of 23 words for bit optimization")
+	jsonDirFlag           = flag.String("json-dir", "", "Directory containing JSON files with wordCandidates")
 	fuzzyPositionsList    []int
 	fuzzyLtdPositionsList []int
 	wordValidList         []string
@@ -1551,6 +1553,324 @@ func calculateEstimatedCombinations() int64 {
 	return estimate
 }
 
+// JSONWordCandidatesItem represents a single wordCandidates entry
+type JSONWordCandidatesItem struct {
+	WordCandidates []string `json:"wordCandidates"`
+}
+
+// loadWordCandidatesFromJSON loads word candidates from a JSON file
+// Supports the format: [{"wordCandidates": ["word1", "word2", ...]}, ...]
+func loadWordCandidatesFromJSON(jsonPath string) ([][][]string, error) {
+	file, err := os.Open(jsonPath)
+	if err != nil {
+		return nil, fmt.Errorf("impossible d'ouvrir le fichier JSON %s: %v", jsonPath, err)
+	}
+	defer file.Close()
+
+	var jsonData []JSONWordCandidatesItem
+	decoder := json.NewDecoder(file)
+	if err := decoder.Decode(&jsonData); err != nil {
+		return nil, fmt.Errorf("impossible de décoder le JSON %s: %v", jsonPath, err)
+	}
+
+	if len(jsonData) == 0 {
+		return nil, fmt.Errorf("aucun candidat de mots trouvé dans %s", jsonPath)
+	}
+
+	// Convert each wordCandidates array to the expected format
+	result := make([][][]string, len(jsonData))
+	for i, item := range jsonData {
+		if len(item.WordCandidates) == 0 {
+			return nil, fmt.Errorf("wordCandidates vide à l'index %d dans %s", i, jsonPath)
+		}
+
+		// Convert flat array to positions array (each word becomes its own position)
+		result[i] = make([][]string, len(item.WordCandidates))
+		for j, word := range item.WordCandidates {
+			result[i][j] = []string{word} // Each position has only one word
+		}
+	}
+
+	fmt.Printf("📁 Chargé %d wordCandidates depuis %s\n", len(result), jsonPath)
+	return result, nil
+}
+
+// extractPositionsFromFilename extracts positions from filename like "20 21.json" -> [20, 21]
+func extractPositionsFromFilename(filename string) ([]int, error) {
+	// Remove file extension
+	basename := strings.TrimSuffix(filename, filepath.Ext(filename))
+
+	// Split by spaces and parse numbers
+	parts := strings.Fields(basename)
+	positions := make([]int, 0, len(parts))
+
+	for _, part := range parts {
+		if pos, err := strconv.Atoi(part); err == nil {
+			if pos >= 0 && pos <= 22 {
+				positions = append(positions, pos)
+			}
+		}
+	}
+
+	if len(positions) == 0 {
+		return nil, fmt.Errorf("aucune position valide trouvée dans le nom de fichier %s", filename)
+	}
+
+	return positions, nil
+}
+
+// FileWithPositions represents a JSON file with its extracted positions
+type FileWithPositions struct {
+	Path      string
+	Positions []int
+}
+
+// sortJSONFilesByComplexity sorts JSON files by number of positions (ascending)
+func sortJSONFilesByComplexity(jsonFiles []string) ([]FileWithPositions, error) {
+	filesWithPos := make([]FileWithPositions, 0, len(jsonFiles))
+
+	for _, jsonFile := range jsonFiles {
+		filename := filepath.Base(jsonFile)
+		positions, err := extractPositionsFromFilename(filename)
+		if err != nil {
+			fmt.Printf("⚠️ Avertissement: %v - fichier ignoré\n", err)
+			continue
+		}
+
+		filesWithPos = append(filesWithPos, FileWithPositions{
+			Path:      jsonFile,
+			Positions: positions,
+		})
+	}
+
+	// Sort by number of positions (ascending - simpler first)
+	sort.Slice(filesWithPos, func(i, j int) bool {
+		return len(filesWithPos[i].Positions) < len(filesWithPos[j].Positions)
+	})
+
+	return filesWithPos, nil
+}
+
+// processJSONFile processes a single JSON file containing multiple word candidates
+func processJSONFile(jsonPath string, positions []int, reverseWords map[string]int) error {
+	fmt.Printf("\n🔄 TRAITEMENT DU FICHIER: %s\n", jsonPath)
+	fmt.Printf("🎯 Positions fuzzy-ltd: %v\n", positions)
+	fmt.Println("══════════════════════════════════════════════════")
+
+	// Load all word candidates from JSON
+	allWordCandidates, err := loadWordCandidatesFromJSON(jsonPath)
+	if err != nil {
+		return fmt.Errorf("erreur lors du chargement de %s: %v", jsonPath, err)
+	}
+
+	// Store original values
+	originalWordCandidates := wordCandidates
+	originalFuzzyLtdPositions := fuzzyLtdPositionsList
+
+	// Set fuzzy-ltd positions for this file
+	fuzzyLtdPositionsList = positions
+
+	// Process each wordCandidates entry in the JSON
+	for i, singleWordCandidates := range allWordCandidates {
+		fmt.Printf("\n🎯 TRAITEMENT WORDCANDIDATES %d/%d du fichier %s\n", i+1, len(allWordCandidates), jsonPath)
+		fmt.Println("──────────────────────────────────────────────────")
+
+		// Use the current wordCandidates
+		wordCandidates = singleWordCandidates
+
+		// Reset global variables for this wordCandidates
+		atomic.StoreInt64(&attemptCount, 0)
+		atomic.StoreInt64(&checksumTestCount, 0)
+		atomic.StoreInt32(&foundResult, 0)
+		atomic.StoreInt32(&bestScore, 0)
+		savedHighScores = make(map[string]bool)
+		startTime = time.Now()
+		lastLogTime = startTime
+
+		// Run the main processing logic
+		err = runMainProcessing(reverseWords)
+
+		if err != nil {
+			fmt.Printf("❌ Erreur lors du traitement de wordCandidates %d dans %s: %v\n", i+1, jsonPath, err)
+			continue // Continue with next wordCandidates instead of failing completely
+		}
+
+		fmt.Printf("✅ WordCandidates %d/%d terminé\n", i+1, len(allWordCandidates))
+
+		// Pause between wordCandidates to avoid overload
+		if i < len(allWordCandidates)-1 {
+			fmt.Println("⏸️ Pause de 1 seconde avant le wordCandidates suivant...")
+			time.Sleep(1 * time.Second)
+		}
+	}
+
+	// Restore original values
+	wordCandidates = originalWordCandidates
+	fuzzyLtdPositionsList = originalFuzzyLtdPositions
+
+	fmt.Printf("✅ Traitement terminé pour %s (%d wordCandidates traités)\n", jsonPath, len(allWordCandidates))
+	return nil
+}
+
+// runMainProcessing contains the main processing logic extracted from main()
+func runMainProcessing(reverseWords map[string]int) error {
+	var finalWordCandidates [][]string
+
+	if *englishMode {
+		// Mode anglais : utiliser directement les mots anglais
+		fmt.Println("🇺🇸 Mode ANGLAIS: Utilisation directe des mots anglais")
+		finalWordCandidates = wordCandidates
+	} else {
+		// Mode français : conversion nécessaire
+		fmt.Println("🇫🇷 Mode FRANÇAIS: Conversion vers anglais...")
+
+		// ÉTAPE 1: Créer le mapping français-anglais
+		fmt.Println("🌍 Création du mapping français-anglais...")
+		frenchToEnglish, err := loadFrenchEnglishMapping("words/french.txt", "words/english.txt")
+		if err != nil {
+			return fmt.Errorf("erreur lors du chargement du mapping: %v", err)
+		}
+
+		// ÉTAPE 2: Convertir les candidats français vers anglais
+		finalWordCandidates = convertFrenchCandidatesToEnglish(wordCandidates, frenchToEnglish)
+	}
+
+	// ÉTAPE 3: Pré-traitement des candidats de mots (maintenant en anglais)
+	preprocessedWordCandidates = preprocessWordCandidates(finalWordCandidates)
+
+	// ÉTAPE 4: Conversion des candidats de mots vers bits
+	bitCandidates = convertWordCandidatesToBits(preprocessedWordCandidates, reverseWords)
+
+	// Calculer une estimation rapide des combinaisons
+	fmt.Println("🧮 Calcul d'estimation des combinaisons...")
+	totalCombinations = calculateEstimatedCombinations()
+
+	totalChecksumTests := totalCombinations * 8 // 8 tests par phrase
+
+	if *fuzzyMode {
+		fmt.Printf("🔍 Mode fuzzy sur positions %v\n", fuzzyPositionsList)
+	}
+
+	if *fuzzyLtdMode {
+		fmt.Printf("📖 Mode fuzzy-ltd sur positions %v\n", fuzzyLtdPositionsList)
+	}
+
+	fmt.Printf("🔢 Phrases estimées à tester: %s (doublons skippés à la volée)\n", formatNumber(totalCombinations))
+	fmt.Printf("🎯 Total tests checksum estimés: %s (8 par phrase)\n", formatNumber(totalChecksumTests))
+	fmt.Printf("🔤 Mots checksum: %v\n", CHECKSUM_WORDS)
+	fmt.Println("🔥 OBJECTIF: Trouver une phrase qui valide TOUS les 8 checksum words!")
+	fmt.Println("💾 AUTO-SAVE: Phrases avec >3 checksums sauvées dans 'high_scores_live.jsonl'")
+
+	// Configuration optimisée des workers avec canal plus large
+	numCPU := runtime.NumCPU()
+	numWorkers := numCPU
+	if totalCombinations > 1000000 {
+		// Pour de gros volumes, utiliser plus de workers mais pas trop
+		numWorkers = numCPU * 2
+	}
+
+	// Canal plus large avec batch processing
+	channelSize := int(min(100000, totalCombinations/int64(numWorkers)*10))
+	if channelSize < 1000 {
+		channelSize = 1000
+	}
+
+	fmt.Printf("🧵 Utilisation de %d workers sur %d cores CPU\n", numWorkers, numCPU)
+	fmt.Printf("📦 Taille du canal: %d (optimisé pour %s combinaisons)\n", channelSize, formatNumber(totalCombinations))
+	fmt.Println()
+
+	// Démarrer le logger de performance en arrière-plan
+	go performanceLogger()
+
+	// Configuration des workers avec canal optimisé
+	workChan := make(chan WorkItem, channelSize)
+	var wg sync.WaitGroup
+
+	// Démarrer les workers
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go worker(workChan, &wg)
+	}
+
+	fmt.Println("🏁 Début du traitement parallélisé...")
+	if *fuzzyMode {
+		fmt.Printf("🔍 Mode fuzzy : positions %v utiliseront toute la wordlist\n", fuzzyPositionsList)
+	}
+	if *fuzzyLtdMode {
+		fmt.Printf("📖 Mode fuzzy-ltd : positions %v utiliseront les %d mots du livre\n", fuzzyLtdPositionsList, len(frenchToEnglishWords))
+	}
+
+	fmt.Println("══════════════════════════════════════════════════")
+
+	// Générer et envoyer les combinaisons aux workers
+	go generateAllCombinations(workChan, reverseWords)
+
+	// Attendre que tous les workers terminent
+	wg.Wait()
+
+	// Si on arrive ici, aucune phrase valide n'a été trouvée
+	duration := time.Since(startTime)
+	fmt.Printf("\n❌ Recherche terminée en %s\n", formatDuration(duration))
+	fmt.Printf("🔍 Total phrases testées: %s\n", formatNumber(atomic.LoadInt64(&attemptCount)))
+	fmt.Printf("🎯 Total tests checksum: %s\n", formatNumber(atomic.LoadInt64(&checksumTestCount)))
+	fmt.Println("💔 Aucune phrase validant TOUS les 8 checksum words trouvée")
+
+	// Afficher le meilleur résultat trouvé
+	finalBestScore := atomic.LoadInt32(&bestScore)
+	if finalBestScore > 0 {
+		bestPhraseMutex.RLock()
+		finalBestPhrase := bestPhrase
+		bestPhraseMutex.RUnlock()
+
+		fmt.Printf("\n🏆 MEILLEUR RÉSULTAT TROUVÉ:\n")
+		fmt.Printf("🎯 Score: %d/8 checksum words corrects\n", finalBestScore)
+		fmt.Printf("📝 Phrase (23 mots): %s\n", finalBestPhrase)
+		fmt.Println("💡 Cette phrase est la plus proche de la solution trouvée!")
+
+		// Sauvegarder le meilleur résultat si pas déjà fait
+		if finalBestScore > 3 {
+			// Recréer la phrase complète pour vérifier les checksum words valides
+			phrase23Words := strings.Split(finalBestPhrase, " ")
+
+			// Test rapide des checksum words pour le meilleur résultat
+			var validChecksumWords []string
+			completeMnemonic := make([]string, 24)
+			copy(completeMnemonic[:23], phrase23Words)
+
+			for _, checksumWord := range CHECKSUM_WORDS {
+				completeMnemonic[23] = checksumWord
+				if isValidMnemonic(completeMnemonic, reverseWords) {
+					validChecksumWords = append(validChecksumWords, checksumWord)
+				}
+			}
+
+			fmt.Printf("🔤 Checksum words valides: %v\n", validChecksumWords)
+
+			// Sauvegarder le résultat final
+			finalFilename := fmt.Sprintf("best_result_%d_checksums_final.json", len(validChecksumWords))
+			bestResult := HighScoreResult{
+				Phrase:             finalBestPhrase,
+				ValidChecksumWords: validChecksumWords,
+				NumValidChecksums:  len(validChecksumWords),
+				Timestamp:          time.Now().Format(time.RFC3339),
+			}
+
+			file, err := os.Create(finalFilename)
+			if err == nil {
+				encoder := json.NewEncoder(file)
+				encoder.SetIndent("", "  ")
+				encoder.Encode(bestResult)
+				file.Close()
+				fmt.Printf("💾 Meilleur résultat sauvé dans: %s\n", finalFilename)
+			}
+		}
+	} else {
+		fmt.Println("\n😢 Aucune phrase n'a validé ne serait-ce qu'un seul checksum word")
+	}
+
+	return nil
+}
+
 func main() {
 	// Parse CLI arguments
 	flag.Usage = func() {
@@ -1569,6 +1889,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "  -phrase=\"...\"\t\tBase phrase of 23 words\n")
 		fmt.Fprintf(os.Stderr, "  -word_target=WORD\tTarget checksum word to validate\n")
 		fmt.Fprintf(os.Stderr, "  -word_valid=\"W1,W2\"\tComma-separated words that must remain valid\n")
+		fmt.Fprintf(os.Stderr, "\nJSON Mode Options:\n")
+		fmt.Fprintf(os.Stderr, "  -json-dir=PATH\t\tDirectory containing JSON files with wordCandidates\n")
 		fmt.Fprintf(os.Stderr, "\nExamples:\n")
 		fmt.Fprintf(os.Stderr, "  %s\t\t\t\t\t\tFrench mode (default)\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -eng\t\t\t\t\tEnglish mode\n", os.Args[0])
@@ -1576,6 +1898,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "  %s -f -pos=20\t\t\t\tFuzzy mode on position 20\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -eng -f -pos=7,10,20\t\t\tEnglish + Fuzzy mode on positions 7, 10, and 20\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s --fuzzy-ltd -p=20,21\t\t\tFuzzy-ltd mode using book words on positions 20 and 21\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "  %s -json-dir=./test\t\t\t\tProcess all JSON files in ./test directory\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -bits -phrase=\"word1 word2 ...\" -word_target=flip -word_valid=\"alien,detect\"\n", os.Args[0])
 	}
 	flag.Parse()
@@ -1683,7 +2006,7 @@ func main() {
 		}
 	}
 
-	// Vérifier qu'on n'a qu'un seul mode activé
+	// Vérifier qu'on n'a qu'un seul mode principal activé
 	if *bitOptimizeMode && *fuzzyMode {
 		fmt.Println("❌ Erreur: Vous ne pouvez pas activer les modes bit optimization ET fuzzy en même temps")
 		flag.Usage()
@@ -1700,6 +2023,19 @@ func main() {
 		fmt.Println("❌ Erreur: Vous ne pouvez pas activer les modes fuzzy ET fuzzy-ltd en même temps")
 		flag.Usage()
 		os.Exit(1)
+	}
+
+	// Validation du mode JSON
+	if *jsonDirFlag != "" && *bitOptimizeMode {
+		fmt.Println("❌ Erreur: Mode JSON incompatible avec le mode bit optimization")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	// Auto-activation du mode fuzzy-ltd quand json-dir est utilisé
+	if *jsonDirFlag != "" {
+		*fuzzyLtdMode = true
+		fmt.Println("🔍 Mode FUZZY-LTD auto-activé avec json-dir")
 	}
 
 	// Optimisations de performance
@@ -1721,28 +2057,6 @@ func main() {
 		fmt.Printf("🔄 Mode REVERSE activé: positions 0-11 inversées\n")
 	}
 
-	var finalWordCandidates [][]string
-
-	if *englishMode {
-		// Mode anglais : utiliser directement les mots anglais
-		fmt.Println("🇺🇸 Mode ANGLAIS: Utilisation directe des mots anglais")
-		finalWordCandidates = wordCandidates
-	} else {
-		// Mode français : conversion nécessaire
-		fmt.Println("🇫🇷 Mode FRANÇAIS: Conversion vers anglais...")
-
-		// ÉTAPE 1: Créer le mapping français-anglais
-		fmt.Println("🌍 Création du mapping français-anglais...")
-		frenchToEnglish, err := loadFrenchEnglishMapping("words/french.txt", "words/english.txt")
-		if err != nil {
-			fmt.Printf("❌ Erreur lors du chargement du mapping: %v\n", err)
-			os.Exit(1)
-		}
-
-		// ÉTAPE 2: Convertir les candidats français vers anglais
-		finalWordCandidates = convertFrenchCandidatesToEnglish(wordCandidates, frenchToEnglish)
-	}
-
 	fmt.Println("📚 Chargement de la wordlist anglaise...")
 
 	wordList = loadWords("./words/english.txt")
@@ -1752,12 +2066,6 @@ func main() {
 	}
 
 	fmt.Printf("✅ %d mots chargés depuis la wordlist\n", len(wordList))
-
-	// ÉTAPE 3: Pré-traitement des candidats de mots (maintenant en anglais)
-	preprocessedWordCandidates = preprocessWordCandidates(finalWordCandidates)
-
-	// ÉTAPE 4: Conversion des candidats de mots vers bits
-	bitCandidates = convertWordCandidatesToBits(preprocessedWordCandidates, reverseWords)
 
 	// ÉTAPE 5: Conversion des mots checksum vers bits
 	fmt.Println("🔢 Conversion des mots checksum vers bits...")
@@ -1846,134 +2154,81 @@ func main() {
 		return
 	}
 
-	// Calculer une estimation rapide des combinaisons
-	fmt.Println("🧮 Calcul d'estimation des combinaisons...")
-	totalCombinations = calculateEstimatedCombinations()
+	// MODE JSON : Traiter tous les fichiers JSON dans le dossier spécifié
+	if *jsonDirFlag != "" {
+		fmt.Printf("📂 MODE JSON ACTIVÉ: Traitement du dossier %s\n", *jsonDirFlag)
 
-	totalChecksumTests := totalCombinations * 8 // 8 tests par phrase
+		// Vérifier que le dossier existe
+		if _, err := os.Stat(*jsonDirFlag); os.IsNotExist(err) {
+			fmt.Printf("❌ Erreur: Le dossier %s n'existe pas\n", *jsonDirFlag)
+			os.Exit(1)
+		}
 
-	if *fuzzyMode {
-		fmt.Printf("🔍 Mode fuzzy sur positions %v\n", fuzzyPositionsList)
-	}
+		// Lister tous les fichiers .json dans le dossier
+		pattern := filepath.Join(*jsonDirFlag, "*.json")
+		jsonFiles, err := filepath.Glob(pattern)
+		if err != nil {
+			fmt.Printf("❌ Erreur lors de la recherche des fichiers JSON: %v\n", err)
+			os.Exit(1)
+		}
 
-	fmt.Printf("🔢 Phrases estimées à tester: %s (doublons skippés à la volée)\n", formatNumber(totalCombinations))
-	fmt.Printf("🎯 Total tests checksum estimés: %s (8 par phrase)\n", formatNumber(totalChecksumTests))
-	fmt.Printf("🔤 Mots checksum: %v\n", CHECKSUM_WORDS)
-	fmt.Println("🔥 OBJECTIF: Trouver une phrase qui valide TOUS les 8 checksum words!")
-	fmt.Println("💾 AUTO-SAVE: Phrases avec >3 checksums sauvées dans 'high_scores_live.jsonl'")
+		if len(jsonFiles) == 0 {
+			fmt.Printf("❌ Aucun fichier JSON trouvé dans le dossier %s\n", *jsonDirFlag)
+			os.Exit(1)
+		}
 
-	// Configuration optimisée des workers avec canal plus large
-	numCPU := runtime.NumCPU()
-	numWorkers := numCPU
-	if totalCombinations > 1000000 {
-		// Pour de gros volumes, utiliser plus de workers mais pas trop
-		numWorkers = numCPU * 2
-	}
+		fmt.Printf("📁 %d fichiers JSON trouvés dans %s\n", len(jsonFiles), *jsonDirFlag)
 
-	// Canal plus large avec batch processing
-	channelSize := int(min(100000, totalCombinations/int64(numWorkers)*10))
-	if channelSize < 1000 {
-		channelSize = 1000
-	}
+		// Trier les fichiers par complexité (nombre de positions croissant)
+		sortedFiles, err := sortJSONFilesByComplexity(jsonFiles)
+		if err != nil {
+			fmt.Printf("❌ Erreur lors du tri des fichiers: %v\n", err)
+			os.Exit(1)
+		}
 
-	fmt.Printf("🧵 Utilisation de %d workers sur %d cores CPU\n", numWorkers, numCPU)
-	fmt.Printf("📦 Taille du canal: %d (optimisé pour %s combinaisons)\n", channelSize, formatNumber(totalCombinations))
-	fmt.Println()
+		if len(sortedFiles) == 0 {
+			fmt.Printf("❌ Aucun fichier JSON valide trouvé dans le dossier %s\n", *jsonDirFlag)
+			os.Exit(1)
+		}
 
-	startTime = time.Now()
-	lastLogTime = startTime
+		fmt.Printf("📊 Ordre de traitement (par complexité croissante):\n")
+		for i, file := range sortedFiles {
+			fmt.Printf("  %d. %s (positions: %v)\n", i+1, filepath.Base(file.Path), file.Positions)
+		}
+		fmt.Println()
 
-	// Démarrer le logger de performance en arrière-plan
-	go performanceLogger()
+		// Traiter chaque fichier JSON dans l'ordre de complexité
+		for i, file := range sortedFiles {
+			fmt.Printf("\n🔄 FICHIER %d/%d: %s\n", i+1, len(sortedFiles), file.Path)
 
-	// Configuration des workers avec canal optimisé
-	workChan := make(chan WorkItem, channelSize)
-	var wg sync.WaitGroup
-
-	// Démarrer les workers
-	for i := 0; i < numWorkers; i++ {
-		wg.Add(1)
-		go worker(workChan, &wg)
-	}
-
-	fmt.Println("🏁 Début du traitement parallélisé...")
-	if *fuzzyMode {
-		fmt.Printf("🔍 Mode fuzzy : positions %v utiliseront toute la wordlist\n", fuzzyPositionsList)
-	}
-	if *fuzzyLtdMode {
-		fmt.Printf("📖 Mode fuzzy-ltd : positions %v utiliseront les %d mots du livre\n", fuzzyLtdPositionsList, len(frenchToEnglishWords))
-	}
-
-	fmt.Println("══════════════════════════════════════════════════")
-
-	// Générer et envoyer les combinaisons aux workers
-	go generateAllCombinations(workChan, reverseWords)
-
-	// Attendre que tous les workers terminent
-	wg.Wait()
-
-	// Si on arrive ici, aucune phrase valide n'a été trouvée
-	duration := time.Since(startTime)
-	fmt.Printf("\n❌ Recherche terminée en %s\n", formatDuration(duration))
-	fmt.Printf("🔍 Total phrases testées: %s\n", formatNumber(atomic.LoadInt64(&attemptCount)))
-	fmt.Printf("🎯 Total tests checksum: %s\n", formatNumber(atomic.LoadInt64(&checksumTestCount)))
-	fmt.Println("💔 Aucune phrase validant TOUS les 8 checksum words trouvée")
-
-	// Afficher le meilleur résultat trouvé
-	finalBestScore := atomic.LoadInt32(&bestScore)
-	if finalBestScore > 0 {
-		bestPhraseMutex.RLock()
-		finalBestPhrase := bestPhrase
-		bestPhraseMutex.RUnlock()
-
-		fmt.Printf("\n🏆 MEILLEUR RÉSULTAT TROUVÉ:\n")
-		fmt.Printf("🎯 Score: %d/8 checksum words corrects\n", finalBestScore)
-		fmt.Printf("📝 Phrase (23 mots): %s\n", finalBestPhrase)
-		fmt.Println("💡 Cette phrase est la plus proche de la solution trouvée!")
-
-		// Sauvegarder le meilleur résultat si pas déjà fait
-		if finalBestScore > 3 {
-			// Recréer la phrase complète pour vérifier les checksum words valides
-			phrase23Words := strings.Split(finalBestPhrase, " ")
-
-			// Test rapide des checksum words pour le meilleur résultat
-			var validChecksumWords []string
-			completeMnemonic := make([]string, 24)
-			copy(completeMnemonic[:23], phrase23Words)
-
-			for _, checksumWord := range CHECKSUM_WORDS {
-				completeMnemonic[23] = checksumWord
-				if isValidMnemonic(completeMnemonic, reverseWords) {
-					validChecksumWords = append(validChecksumWords, checksumWord)
-				}
+			err := processJSONFile(file.Path, file.Positions, reverseWords)
+			if err != nil {
+				fmt.Printf("❌ Erreur lors du traitement de %s: %v\n", file.Path, err)
+				continue
 			}
 
-			fmt.Printf("🔤 Checksum words valides: %v\n", validChecksumWords)
-
-			// Sauvegarder le résultat final
-			finalFilename := fmt.Sprintf("best_result_%d_checksums_final.json", len(validChecksumWords))
-			bestResult := HighScoreResult{
-				Phrase:             finalBestPhrase,
-				ValidChecksumWords: validChecksumWords,
-				NumValidChecksums:  len(validChecksumWords),
-				Timestamp:          time.Now().Format(time.RFC3339),
-			}
-
-			file, err := os.Create(finalFilename)
-			if err == nil {
-				encoder := json.NewEncoder(file)
-				encoder.SetIndent("", "  ")
-				encoder.Encode(bestResult)
-				file.Close()
-				fmt.Printf("💾 Meilleur résultat sauvé dans: %s\n", finalFilename)
+			// Pause entre les fichiers pour éviter la surcharge
+			if i < len(sortedFiles)-1 {
+				fmt.Println("⏸️ Pause de 2 secondes avant le fichier suivant...")
+				time.Sleep(2 * time.Second)
 			}
 		}
-	} else {
-		fmt.Println("\n😢 Aucune phrase n'a validé ne serait-ce qu'un seul checksum word")
+
+		fmt.Printf("\n🏁 TRAITEMENT TERMINÉ: %d fichiers JSON traités\n", len(sortedFiles))
+		return
+	}
+
+	// MODE NORMAL : Utiliser les wordCandidates hardcodés
+	fmt.Println("🔧 MODE NORMAL: Utilisation des wordCandidates hardcodés")
+
+	// Exécuter le traitement principal
+	err := runMainProcessing(reverseWords)
+	if err != nil {
+		fmt.Printf("❌ Erreur lors du traitement principal: %v\n", err)
+		os.Exit(1)
 	}
 
 	// Statistiques finales des optimisations
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
-
 }
