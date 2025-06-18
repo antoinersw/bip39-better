@@ -1,0 +1,187 @@
+
+// Word candidates for each position (only 23 positions - last word will be from CHECKSUM_WORDS)
+// var wordCandidates = [][]string{
+// //  erase oven prevent  father  noise reward level blouse rotate admit helmet mansion
+// 	{"échelle"},
+// 	{"mondial"},
+// 	{"odeur"},
+// 	{"énergie"},
+
+// 	{"physique"},
+// 	{"bilan"},
+// 	{"indice"},
+// 	{"acheter"},
+// 	{"pluie"},
+// 	{"soleil"},
+// 	{"métier"},
+// 	{"joindre"},
+// 	{"énergie", "monnaie", "pierre"}, // position 13
+// 	{"monnaie", "énergie", "pierre"}, // position 14
+// 	// virés : médaille, utopie
+// 	{"louve", "olivier", "flamme", "humain", "montagne", "étoile", "torche", "dragon"},                                                  // position 15
+// 	{"louve", "olivier", "flamme", "humain", "montagne", "étoile", "torche", "dragon"},                                                  // position 16
+// 	{"querelle", "noisette", "racine", "creuser"},                                                                                       // position 17
+// 	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 18
+// 	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+// 	{"thème", "central", "pièce", "monnaie"},                                                                                            // position 20
+// 	{"thème", "central", "pièce", "monnaie"},                                                                                            // position 21
+// 	{"open","always"},   // position 22
+// 	{"always","open"}, // position 23
+
+// }
+
+
+var wordCandidates = [][]string{
+	// 14 premiers mots
+	{"erase"},                              // 0.449
+	{"oven","miss" },                    // 0.274
+	{"miss", "oven","prevent",},                       // 0.414
+	{"father"},                             // 0.417
+	{"noise"},                              // 0.358
+	{"reward"},                             // 0.387
+	{"level"},                              // 0.34
+	{"blouse", "upset", "thrive", "admit"}, // 0.288
+	{"admit", "thrive", "upset", "rotate"}, // 0.328
+	{"rotate", "admit", "upset"},           // 0.328
+	{"tell", "mansion", "helmet"},          // 0.21
+	{"tell", "mansion", "only"},            // 0.371x
+	// couverture
+	{"own", "father", "rice"},
+	{"rice", "father", "own"},
+	// 14 premiers mots end
+	// année olympique	
+	{"muscle", "woman", "window", "half", "place", "only"},
+	{"muscle", "woman", "window", "half", "place", "only"},
+	// lien avec le nom de l'auteur
+	{"shell", "actress", "deny"}, // 0.66
+	// sommaire
+	{"subject", "army", "own", "calm", "father"}, // position 17
+	{"army", "subject", "own", "calm", "father"}, // position 18
+	// début d'un chapitre qui traite d'un thème central du livre.
+	{"fade", "accuse", "axis", "cheese", "correct", "alpha", "resemble", "barely", "basic"},
+	{"fade", "accuse", "axis", "cheese", "correct", "alpha", "resemble", "barely", "basic"},
+	// slogan
+	{"open"},   // 1
+	{"always"}, // 1
+
+}
+
+
+
+
+
+
+
+
+
+
+
+a lancer cttet nuit 
+
+var wordCandidates = [][]string{
+	//  erase oven prevent  father  noise reward level
+	// blouse rotate admit helmet mansion
+	{"échelle", "source", "libre", "fossile", "travail", "manuel", "physique", "bilan", "indice", "baguette", "acheter", "pluie"},
+	{"échelle", "libre", "source", "fossile", "travail", "manuel", "physique", "bilan", "indice", "baguette", "acheter", "pluie"},
+	{"échelle", "libre", "fossile", "travail", "manuel", "physique", "bilan", "indice", "baguette", "acheter", "pluie", "soleil"},
+	{"échelle", "libre", "fossile", "manuel", "physique", "indice", "baguette", "acheter", "pluie", "soleil", "métier"},
+	{"échelle", "libre", "fossile", "manuel", "physique", "bilan", "indice", "acheter", "pluie", "soleil", "métier"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "bilan", "indice", "acheter", "pluie", "soleil"},
+	{"échelle", "mondial", "source", "libre", "fossile", "travail", "manuel", "physique", "bilan", "indice", "baguette", "acheter"},
+	{"échelle", "mondial", "libre", "source", "fossile", "travail", "manuel", "physique", "bilan", "indice", "baguette", "acheter"},
+	{"échelle", "mondial", "libre", "fossile", "travail", "manuel", "physique", "bilan", "indice", "baguette", "acheter", "pluie"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "bilan", "indice", "baguette", "acheter", "pluie", "soleil"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "indice", "baguette", "acheter", "pluie", "soleil"},
+	{"pierre", "échelle", "libre", "fossile", "manuel", "physique", "indice", "baguette", "acheter", "pluie", "soleil"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "indice", "baguette", "acheter", "pluie", "soleil"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "indice", "baguette", "acheter", "pluie", "soleil", "manuel"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "bilan", "indice", "baguette", "acheter", "pluie", "soleil"},
+	{"échelle", "mondial", "libre", "fossile", "manuel", "physique", "indice", "baguette", "acheter", "pluie", "soleil", "manuel"},
+	{"pluie", "acheter", "baguette", "indice", "bilan", "physique", "manuel", "travail", "fossile", "libre", "source", "échelle"},
+	{"pluie", "acheter", "baguette", "indice", "bilan", "physique", "manuel", "travail", "fossile", "libre", "source", "échelle"},
+	{"soleil", "pluie", "acheter", "baguette", "indice", "bilan", "physique", "manuel", "travail", "fossile", "libre", "échelle"},
+	{"soleil", "pluie", "acheter", "baguette", "indice", "bilan", "physique", "manuel", "fossile", "libre", "échelle"},
+	{"soleil", "pluie", "acheter", "baguette", "indice", "bilan", "physique", "manuel", "fossile", "libre", "échelle"},
+	{"métier", "soleil", "pluie", "acheter", "baguette", "indice", "physique", "manuel", "fossile", "libre", "échelle"},
+	{"métier", "soleil", "pluie", "acheter", "baguette", "indice", "physique", "manuel", "fossile", "libre", "échelle"},
+	{"énergie", "monnaie", "pierre"}, // position 13
+	{"monnaie", "énergie", "pierre"}, // position 14
+ 
+	{"olivier", "humain", "montagne", "étoile"}, // position 15
+	{"olivier", "humain", "montagne", "étoile"}, // position 16
+	{"racine", "acheter"},                       // position 17
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre"}, // position 18
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre"}, // position 19
+	{"pièce", "monnaie", "émotion", "absence", "argent", "calculer", "affiche", "perte", "aspect", "asservir"},                // position 20
+	{"pièce", "monnaie", "émotion", "absence", "argent", "calculer", "affiche", "perte", "aspect", "asservir"},                // position 21
+	{"meuble"},   // position 22
+	{"agencer"}, // position 23
+
+}
+
+
+var wordCandidates = [][]string{
+	// 14 premiers mots
+	{"erase"},        // 0.449
+	{"oven", "miss"}, // 0.274
+	{"miss", "oven", "pride"},
+	{"father"},                             // 0.417
+	{"noise"},                              // 0.358
+	{"reward"},                             // 0.387
+	{"level"},                              // 0.34
+	{"blouse", "upset", "thrive", "admit"}, // 0.288
+	{"admit", "thrive", "upset", "rotate"}, // 0.328          // 0.328
+	{"admit"},                              // 0.328
+	{"helmet"},                             // 0.21
+	{"mansion"},                            // 0.371
+	// couverture
+	{"own", "father", "rice"},
+	{"rice", "father", "own"},
+	// 14 premiers mots end
+	// année olympique
+	{"muscle", "woman", "window", "half", "place", "only", "chronic"},
+	{"muscle", "woman", "window", "half", "place", "only", "chronic"},
+	// lien avec le nom de l'auteur
+	{"deny"}, // 0.66
+	// sommaire
+	{"subject", "army", "own", "calm", "father"}, // position 17
+	{"army", "subject", "own", "calm", "father"}, // position 18
+	// début d'un chapitre qui traite d'un thème central du livre.
+	{"fade", "slam", "then", "accuse", "axis", "cheese", "correct", "alpha", "resemble", "barely", "basic"},
+	{"fade", "slam", "then", "accuse", "axis", "cheese", "correct", "alpha", "resemble", "barely", "basic"},
+	// slogan
+	{"open"},   // 1
+	{"always"}, // 1
+
+}
+
+
+var wordCandidates = [][]string{
+// //  erase oven prevent  father  noise reward level blouse rotate admit helmet mansion
+	{"échelle"},
+	{"mondial"},
+	{"odeur"},
+	{"énergie"},
+
+	{"physique"},
+	{"bilan"},
+	{"indice"},
+	{"acheter"},
+	{"pluie"},
+	{"soleil"},
+	{"métier"},
+	{"joindre"},
+	{"énergie", "monnaie", "pierre"}, // position 13
+	{"monnaie", "énergie", "pierre"}, // position 14
+	// virés : médaille, utopie
+	{"louve", "olivier", "flamme", "humain", "montagne", "étoile", "torche", "dragon"},                                                  // position 15
+	{"louve", "olivier", "flamme", "humain", "montagne", "étoile", "torche", "dragon"},                                                  // position 16
+	{"querelle", "noisette", "racine", "creuser"},                                                                                       // position 17
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 18
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+	{"thème", "central", "pièce", "monnaie"},                                                                                            // position 20
+	{"thème", "central", "pièce", "monnaie"},                                                                                            // position 21
+	{"open","always"},   // position 22
+	{"always","open"}, // position 23
+
+}

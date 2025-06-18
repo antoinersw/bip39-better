@@ -1,0 +1,201 @@
+🚀 BENCHMARK DE PERFORMANCE - OPTIMISATIONS BIP39
+============================================================
+Timestamp: 2025-06-18T10:45:21+02:00
+CPU Cores: 20
+GOMAXPROCS: 20
+Memory Available: 6.27 MB
+
+🎯 DÉMARRAGE DES BENCHMARKS DE PERFORMANCE
+
+🧪 BENCHMARK: Validation BIP39 Optimisée (1000 échantillons)
+
+📊 RÉSULTATS DU BENCHMARK:
+----------------------------------------
+Test: Validation BIP39 Optimisée
+Échantillons: 1.0K
+Durée totale: 600.8µs
+Phrases/sec: 1664447
+Checksums/sec: 8322237
+Mémoire utilisée: 0.61 MB
+CPU Cores: 20
+
+🔮 ESTIMATIONS POUR GRANDES ÉCHELLES:
+----------------------------------------
+1 Milliard phrases:
+  ⏱️  Temps estimé: 10.0 minutes
+  💾 Mémoire estimée: 500.0 GB
+  🎯 Faisabilité: ✅ EXCELLENT
+10 Milliards phrases:
+  ⏱️  Temps estimé: 1.7 heures
+  💾 Mémoire estimée: 5.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+100 Milliards phrases:
+  ⏱️  Temps estimé: 16.7 heures
+  💾 Mémoire estimée: 50.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+
+🖥️ COMPARAISON SERVEURS HAUTE PERFORMANCE:
+--------------------------------------------------
+📟 Machine Actuelle:
+   🔧 Spécifications: Intel i9-13900H @ 2.60GHz (16 cores)
+   ⚡ Amélioration: 1.0x plus rapide
+   🎯 Phrases/sec: 1664447
+   ⏱️  10 milliards: 1.7 heures
+   ⏱️  100 milliards: 16.7 heures
+   💰 Coût/Efficacité: ✅ EXCELLENT (déjà possédé)
+
+📟 Serveur 128 Cores:
+   🔧 Spécifications: 128 cores @ 3.1GHz
+   ⚡ Amélioration: 6.7x plus rapide
+   🎯 Phrases/sec: 11113387
+   ⏱️  10 milliards: 15.0 minutes
+   ⏱️  100 milliards: 2.5 heures
+   💰 Coût/Efficacité: ⚠️ BON ROI
+
+📟 Serveur 96 Cores HT:
+   🔧 Spécifications: 96 cores / 192 threads @ 3.7GHz
+   ⚡ Amélioration: 5.5x plus rapide
+   🎯 Phrases/sec: 9237683
+   ⏱️  10 milliards: 18.0 minutes
+   ⏱️  100 milliards: 3.0 heures
+   💰 Coût/Efficacité: ⚠️ BON ROI
+
+🎯 RECOMMANDATIONS SERVEURS:
+   🏆 MEILLEUR CHOIX: Serveur 128 cores
+      ⚡ 100 milliards en seulement 2.5 heures
+      ✅ TRAITEMENT EN MOINS DE 24H!
+   ✅ Votre machine actuelle: PARFAITE pour 10 milliards
+
+🧪 BENCHMARK: Validation BIP39 Optimisée (10000 échantillons)
+
+📊 RÉSULTATS DU BENCHMARK:
+----------------------------------------
+Test: Validation BIP39 Optimisée
+Échantillons: 10.0K
+Durée totale: 8.75ms
+Phrases/sec: 1142857
+Checksums/sec: 5714286
+Mémoire utilisée: 3.32 MB
+CPU Cores: 20
+
+🔮 ESTIMATIONS POUR GRANDES ÉCHELLES:
+----------------------------------------
+1 Milliard phrases:
+  ⏱️  Temps estimé: 14.6 minutes
+  💾 Mémoire estimée: 500.0 GB
+  🎯 Faisabilité: ✅ EXCELLENT
+10 Milliards phrases:
+  ⏱️  Temps estimé: 2.4 heures
+  💾 Mémoire estimée: 5.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+100 Milliards phrases:
+  ⏱️  Temps estimé: 1.0 jours
+  💾 Mémoire estimée: 50.0 TB
+  🎯 Faisabilité: ⚠️ LONG (>24h)
+
+🖥️ COMPARAISON SERVEURS HAUTE PERFORMANCE:
+--------------------------------------------------
+📟 Machine Actuelle:
+   🔧 Spécifications: Intel i9-13900H @ 2.60GHz (16 cores)
+   ⚡ Amélioration: 1.0x plus rapide
+   🎯 Phrases/sec: 1142857
+   ⏱️  10 milliards: 2.4 heures
+   ⏱️  100 milliards: 1.0 jours
+   💰 Coût/Efficacité: ✅ EXCELLENT (déjà possédé)
+
+📟 Serveur 128 Cores:
+   🔧 Spécifications: 128 cores @ 3.1GHz
+   ⚡ Amélioration: 6.7x plus rapide
+   🎯 Phrases/sec: 7630769
+   ⏱️  10 milliards: 21.8 minutes
+   ⏱️  100 milliards: 3.6 heures
+   💰 Coût/Efficacité: ⚠️ BON ROI
+
+📟 Serveur 96 Cores HT:
+   🔧 Spécifications: 96 cores / 192 threads @ 3.7GHz
+   ⚡ Amélioration: 5.5x plus rapide
+   🎯 Phrases/sec: 6342857
+   ⏱️  10 milliards: 26.3 minutes
+   ⏱️  100 milliards: 4.4 heures
+   💰 Coût/Efficacité: ⚠️ BON ROI
+
+🎯 RECOMMANDATIONS SERVEURS:
+   🏆 MEILLEUR CHOIX: Serveur 128 cores
+      ⚡ 100 milliards en seulement 3.6 heures
+      ✅ TRAITEMENT EN MOINS DE 24H!
+   ✅ Votre machine actuelle: PARFAITE pour 10 milliards
+
+🧪 BENCHMARK: Validation BIP39 Optimisée (100000 échantillons)
+
+📊 RÉSULTATS DU BENCHMARK:
+----------------------------------------
+Test: Validation BIP39 Optimisée
+Échantillons: 100.0K
+Durée totale: 69.5555ms
+Phrases/sec: 1437701
+Checksums/sec: 7188504
+Mémoire utilisée: 12.52 MB
+CPU Cores: 20
+
+🔮 ESTIMATIONS POUR GRANDES ÉCHELLES:
+----------------------------------------
+1 Milliard phrases:
+  ⏱️  Temps estimé: 11.6 minutes
+  💾 Mémoire estimée: 500.0 GB
+  🎯 Faisabilité: ✅ EXCELLENT
+10 Milliards phrases:
+  ⏱️  Temps estimé: 1.9 heures
+  💾 Mémoire estimée: 5.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+100 Milliards phrases:
+  ⏱️  Temps estimé: 19.3 heures
+  💾 Mémoire estimée: 50.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+
+🖥️ COMPARAISON SERVEURS HAUTE PERFORMANCE:
+--------------------------------------------------
+📟 Machine Actuelle:
+   🔧 Spécifications: Intel i9-13900H @ 2.60GHz (16 cores)
+   ⚡ Amélioration: 1.0x plus rapide
+   🎯 Phrases/sec: 1437701
+   ⏱️  10 milliards: 1.9 heures
+   ⏱️  100 milliards: 19.3 heures
+   💰 Coût/Efficacité: ✅ EXCELLENT (déjà possédé)
+
+📟 Serveur 128 Cores:
+   🔧 Spécifications: 128 cores @ 3.1GHz
+   ⚡ Amélioration: 6.7x plus rapide
+   🎯 Phrases/sec: 9599418
+   ⏱️  10 milliards: 17.4 minutes
+   ⏱️  100 milliards: 2.9 heures
+   💰 Coût/Efficacité: ⚠️ BON ROI
+
+📟 Serveur 96 Cores HT:
+   🔧 Spécifications: 96 cores / 192 threads @ 3.7GHz
+   ⚡ Amélioration: 5.5x plus rapide
+   🎯 Phrases/sec: 7979240
+   ⏱️  10 milliards: 20.9 minutes
+   ⏱️  100 milliards: 3.5 heures
+   💰 Coût/Efficacité: ⚠️ BON ROI
+
+🎯 RECOMMANDATIONS SERVEURS:
+   🏆 MEILLEUR CHOIX: Serveur 128 cores
+      ⚡ 100 milliards en seulement 2.9 heures
+      ✅ TRAITEMENT EN MOINS DE 24H!
+   ✅ Votre machine actuelle: PARFAITE pour 10 milliards
+
+📈 RÉSUMÉ FINAL DES PERFORMANCES:
+============================================================
+🏆 MEILLEURE PERFORMANCE (échantillon 100.0K):
+   Phrases/sec: 1437701
+   Checksums/sec: 7188504
+
+🎯 RECOMMANDATIONS FINALES POUR VOS MILLIARDS DE DONNÉES:
+   ✅ 10 milliards: FAISABLE sur votre machine actuelle
+      Temps estimé: 1.9 heures
+
+💰 ANALYSE COÛT/BÉNÉFICE:
+   🏆 DÉCISION: Restez sur votre machine actuelle
+   💡 10 milliards = traitement optimal sans investissement
+
+✅ BENCHMARK TERMINÉ - Résultats sauvés dans le fichier log

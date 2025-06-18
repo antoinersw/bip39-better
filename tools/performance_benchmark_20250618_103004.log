@@ -1,0 +1,102 @@
+🚀 BENCHMARK DE PERFORMANCE - OPTIMISATIONS BIP39
+============================================================
+Timestamp: 2025-06-18T10:30:04+02:00
+CPU Cores: 20
+GOMAXPROCS: 20
+Memory Available: 6.27 MB
+
+🎯 DÉMARRAGE DES BENCHMARKS DE PERFORMANCE
+
+🧪 BENCHMARK: Validation BIP39 Optimisée (1000 échantillons)
+
+📊 RÉSULTATS DU BENCHMARK:
+----------------------------------------
+Test: Validation BIP39 Optimisée
+Échantillons: 1.0K
+Durée totale: 1.1129ms
+Phrases/sec: 898553
+Checksums/sec: 4492767
+Mémoire utilisée: 0.61 MB
+CPU Cores: 20
+
+🔮 ESTIMATIONS POUR GRANDES ÉCHELLES:
+----------------------------------------
+1 Milliard phrases:
+  ⏱️  Temps estimé: 18.5 minutes
+  💾 Mémoire estimée: 500.0 GB
+  🎯 Faisabilité: ✅ EXCELLENT
+10 Milliards phrases:
+  ⏱️  Temps estimé: 3.1 heures
+  💾 Mémoire estimée: 5.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+100 Milliards phrases:
+  ⏱️  Temps estimé: 1.3 jours
+  💾 Mémoire estimée: 50.0 TB
+  🎯 Faisabilité: ⚠️ LONG (>24h)
+
+🧪 BENCHMARK: Validation BIP39 Optimisée (10000 échantillons)
+
+📊 RÉSULTATS DU BENCHMARK:
+----------------------------------------
+Test: Validation BIP39 Optimisée
+Échantillons: 10.0K
+Durée totale: 15.5319ms
+Phrases/sec: 643836
+Checksums/sec: 3219181
+Mémoire utilisée: 0.89 MB
+CPU Cores: 20
+
+🔮 ESTIMATIONS POUR GRANDES ÉCHELLES:
+----------------------------------------
+1 Milliard phrases:
+  ⏱️  Temps estimé: 25.9 minutes
+  💾 Mémoire estimée: 500.0 GB
+  🎯 Faisabilité: ✅ EXCELLENT
+10 Milliards phrases:
+  ⏱️  Temps estimé: 4.3 heures
+  💾 Mémoire estimée: 5.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+100 Milliards phrases:
+  ⏱️  Temps estimé: 1.8 jours
+  💾 Mémoire estimée: 50.0 TB
+  🎯 Faisabilité: ⚠️ LONG (>24h)
+
+🧪 BENCHMARK: Validation BIP39 Optimisée (100000 échantillons)
+
+📊 RÉSULTATS DU BENCHMARK:
+----------------------------------------
+Test: Validation BIP39 Optimisée
+Échantillons: 100.0K
+Durée totale: 111.9198ms
+Phrases/sec: 893497
+Checksums/sec: 4467485
+Mémoire utilisée: 11.61 MB
+CPU Cores: 20
+
+🔮 ESTIMATIONS POUR GRANDES ÉCHELLES:
+----------------------------------------
+1 Milliard phrases:
+  ⏱️  Temps estimé: 18.6 minutes
+  💾 Mémoire estimée: 500.0 GB
+  🎯 Faisabilité: ✅ EXCELLENT
+10 Milliards phrases:
+  ⏱️  Temps estimé: 3.1 heures
+  💾 Mémoire estimée: 5.0 TB
+  🎯 Faisabilité: ✅ EXCELLENT
+100 Milliards phrases:
+  ⏱️  Temps estimé: 1.3 jours
+  💾 Mémoire estimée: 50.0 TB
+  🎯 Faisabilité: ⚠️ LONG (>24h)
+
+📈 RÉSUMÉ FINAL DES PERFORMANCES:
+============================================================
+🏆 MEILLEURE PERFORMANCE (échantillon 100.0K):
+   Phrases/sec: 893497
+   Checksums/sec: 4467485
+
+🎯 RECOMMANDATIONS POUR VOS MILLIARDS DE DONNÉES:
+   ✅ 10 milliards de phrases: FAISABLE
+      Temps estimé: 3.1 heures
+   ⚠️  100 milliards: POSSIBLE avec optimisations supplémentaires
+
+✅ BENCHMARK TERMINÉ - Résultats sauvés dans le fichier log

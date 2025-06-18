@@ -1,0 +1,2683 @@
+{
+  "timestamp": "2025-06-17T19:22:48+02:00",
+  "total_found": 535,
+  "words": [
+    {
+      "word": "abdiquer",
+      "index": 3
+    },
+    {
+      "word": "abolir",
+      "index": 5
+    },
+    {
+      "word": "aboutir",
+      "index": 7
+    },
+    {
+      "word": "absence",
+      "index": 14
+    },
+    {
+      "word": "absolu",
+      "index": 15
+    },
+    {
+      "word": "absurde",
+      "index": 16
+    },
+    {
+      "word": "accepter",
+      "index": 23
+    },
+    {
+      "word": "accuser",
+      "index": 27
+    },
+    {
+      "word": "achat",
+      "index": 29
+    },
+    {
+      "word": "acheter",
+      "index": 30
+    },
+    {
+      "word": "acier",
+      "index": 32
+    },
+    {
+      "word": "acquérir",
+      "index": 34
+    },
+    {
+      "word": "actif",
+      "index": 37
+    },
+    {
+      "word": "admettre",
+      "index": 44
+    },
+    {
+      "word": "adopter",
+      "index": 46
+    },
+    {
+      "word": "adulte",
+      "index": 51
+    },
+    {
+      "word": "affaire",
+      "index": 55
+    },
+    {
+      "word": "affecter",
+      "index": 56
+    },
+    {
+      "word": "affiche",
+      "index": 57
+    },
+    {
+      "word": "agréable",
+      "index": 65
+    },
+    {
+      "word": "aider",
+      "index": 67
+    },
+    {
+      "word": "aimable",
+      "index": 70
+    },
+    {
+      "word": "aisance",
+      "index": 71
+    },
+    {
+      "word": "ajouter",
+      "index": 72
+    },
+    {
+      "word": "ajuster",
+      "index": 73
+    },
+    {
+      "word": "alerte",
+      "index": 76
+    },
+    {
+      "word": "amateur",
+      "index": 89
+    },
+    {
+      "word": "amour",
+      "index": 97
+    },
+    {
+      "word": "analyse",
+      "index": 102
+    },
+    {
+      "word": "anarchie",
+      "index": 104
+    },
+    {
+      "word": "ancien",
+      "index": 106
+    },
+    {
+      "word": "anéantir",
+      "index": 107
+    },
+    {
+      "word": "angle",
+      "index": 108
+    },
+    {
+      "word": "animal",
+      "index": 111
+    },
+    {
+      "word": "annonce",
+      "index": 113
+    },
+    {
+      "word": "anonyme",
+      "index": 117
+    },
+    {
+      "word": "anxieux",
+      "index": 121
+    },
+    {
+      "word": "appareil",
+      "index": 126
+    },
+    {
+      "word": "appuyer",
+      "index": 129
+    },
+    {
+      "word": "arbitre",
+      "index": 132
+    },
+    {
+      "word": "argent",
+      "index": 136
+    },
+    {
+      "word": "armement",
+      "index": 139
+    },
+    {
+      "word": "arriver",
+      "index": 144
+    },
+    {
+      "word": "article",
+      "index": 148
+    },
+    {
+      "word": "aspect",
+      "index": 149
+    },
+    {
+      "word": "aspirer",
+      "index": 151
+    },
+    {
+      "word": "asservir",
+      "index": 153
+    },
+    {
+      "word": "associer",
+      "index": 155
+    },
+    {
+      "word": "assurer",
+      "index": 156
+    },
+    {
+      "word": "atelier",
+      "index": 160
+    },
+    {
+      "word": "atome",
+      "index": 161
+    },
+    {
+      "word": "attaque",
+      "index": 164
+    },
+    {
+      "word": "attirer",
+      "index": 166
+    },
+    {
+      "word": "avancer",
+      "index": 177
+    },
+    {
+      "word": "avenir",
+      "index": 179
+    },
+    {
+      "word": "aveugle",
+      "index": 181
+    },
+    {
+      "word": "avide",
+      "index": 183
+    },
+    {
+      "word": "avion",
+      "index": 184
+    },
+    {
+      "word": "baguette",
+      "index": 194
+    },
+    {
+      "word": "bancaire",
+      "index": 201
+    },
+    {
+      "word": "banquier",
+      "index": 205
+    },
+    {
+      "word": "barque",
+      "index": 209
+    },
+    {
+      "word": "barrage",
+      "index": 210
+    },
+    {
+      "word": "bateau",
+      "index": 214
+    },
+    {
+      "word": "bénéfice",
+      "index": 221
+    },
+    {
+      "word": "bétail",
+      "index": 228
+    },
+    {
+      "word": "bilan",
+      "index": 234
+    },
+    {
+      "word": "binaire",
+      "index": 237
+    },
+    {
+      "word": "bonheur",
+      "index": 261
+    },
+    {
+      "word": "bourse",
+      "index": 272
+    },
+    {
+      "word": "boutique",
+      "index": 274
+    },
+    {
+      "word": "branche",
+      "index": 276
+    },
+    {
+      "word": "cadeau",
+      "index": 309
+    },
+    {
+      "word": "cadre",
+      "index": 310
+    },
+    {
+      "word": "calculer",
+      "index": 314
+    },
+    {
+      "word": "calmer",
+      "index": 317
+    },
+    {
+      "word": "capable",
+      "index": 329
+    },
+    {
+      "word": "capter",
+      "index": 333
+    },
+    {
+      "word": "carbone",
+      "index": 336
+    },
+    {
+      "word": "causer",
+      "index": 347
+    },
+    {
+      "word": "censurer",
+      "index": 357
+    },
+    {
+      "word": "central",
+      "index": 358
+    },
+    {
+      "word": "cercle",
+      "index": 359
+    },
+    {
+      "word": "cerveau",
+      "index": 363
+    },
+    {
+      "word": "chaleur",
+      "index": 367
+    },
+    {
+      "word": "chambre",
+      "index": 368
+    },
+    {
+      "word": "chapitre",
+      "index": 370
+    },
+    {
+      "word": "charbon",
+      "index": 371
+    },
+    {
+      "word": "chasseur",
+      "index": 372
+    },
+    {
+      "word": "chercher",
+      "index": 379
+    },
+    {
+      "word": "chien",
+      "index": 381
+    },
+    {
+      "word": "chiffre",
+      "index": 382
+    },
+    {
+      "word": "chimère",
+      "index": 384
+    },
+    {
+      "word": "choisir",
+      "index": 388
+    },
+    {
+      "word": "chose",
+      "index": 389
+    },
+    {
+      "word": "cimenter",
+      "index": 395
+    },
+    {
+      "word": "circuler",
+      "index": 398
+    },
+    {
+      "word": "citoyen",
+      "index": 402
+    },
+    {
+      "word": "civil",
+      "index": 404
+    },
+    {
+      "word": "classe",
+      "index": 408
+    },
+    {
+      "word": "climat",
+      "index": 412
+    },
+    {
+      "word": "cohésion",
+      "index": 425
+    },
+    {
+      "word": "comédie",
+      "index": 434
+    },
+    {
+      "word": "confier",
+      "index": 439
+    },
+    {
+      "word": "corpus",
+      "index": 451
+    },
+    {
+      "word": "correct",
+      "index": 452
+    },
+    {
+      "word": "cosmique",
+      "index": 454
+    },
+    {
+      "word": "crainte",
+      "index": 464
+    },
+    {
+      "word": "cristal",
+      "index": 474
+    },
+    {
+      "word": "critère",
+      "index": 475
+    },
+    {
+      "word": "croire",
+      "index": 476
+    },
+    {
+      "word": "crucial",
+      "index": 479
+    },
+    {
+      "word": "cuivre",
+      "index": 486
+    },
+    {
+      "word": "cycle",
+      "index": 494
+    },
+    {
+      "word": "danger",
+      "index": 499
+    },
+    {
+      "word": "débattre",
+      "index": 502
+    },
+    {
+      "word": "décembre",
+      "index": 508
+    },
+    {
+      "word": "décider",
+      "index": 510
+    },
+    {
+      "word": "déclarer",
+      "index": 511
+    },
+    {
+      "word": "décrire",
+      "index": 513
+    },
+    {
+      "word": "demander",
+      "index": 528
+    },
+    {
+      "word": "dépenser",
+      "index": 536
+    },
+    {
+      "word": "déplacer",
+      "index": 538
+    },
+    {
+      "word": "descente",
+      "index": 543
+    },
+    {
+      "word": "désert",
+      "index": 544
+    },
+    {
+      "word": "désigner",
+      "index": 545
+    },
+    {
+      "word": "devenir",
+      "index": 554
+    },
+    {
+      "word": "devoir",
+      "index": 556
+    },
+    {
+      "word": "dialogue",
+      "index": 558
+    },
+    {
+      "word": "dicter",
+      "index": 560
+    },
+    {
+      "word": "différer",
+      "index": 561
+    },
+    {
+      "word": "digital",
+      "index": 563
+    },
+    {
+      "word": "diminuer",
+      "index": 567
+    },
+    {
+      "word": "dioxyde",
+      "index": 568
+    },
+    {
+      "word": "diriger",
+      "index": 570
+    },
+    {
+      "word": "disposer",
+      "index": 572
+    },
+    {
+      "word": "dissiper",
+      "index": 573
+    },
+    {
+      "word": "distance",
+      "index": 574
+    },
+    {
+      "word": "diviser",
+      "index": 576
+    },
+    {
+      "word": "domaine",
+      "index": 581
+    },
+    {
+      "word": "domicile",
+      "index": 582
+    },
+    {
+      "word": "donner",
+      "index": 586
+    },
+    {
+      "word": "dopamine",
+      "index": 587
+    },
+    {
+      "word": "double",
+      "index": 595
+    },
+    {
+      "word": "douter",
+      "index": 597
+    },
+    {
+      "word": "durable",
+      "index": 606
+    },
+    {
+      "word": "écarter",
+      "index": 610
+    },
+    {
+      "word": "échelle",
+      "index": 612
+    },
+    {
+      "word": "école",
+      "index": 617
+    },
+    {
+      "word": "économie",
+      "index": 618
+    },
+    {
+      "word": "écrivain",
+      "index": 623
+    },
+    {
+      "word": "écureuil",
+      "index": 626
+    },
+    {
+      "word": "effacer",
+      "index": 629
+    },
+    {
+      "word": "effort",
+      "index": 632
+    },
+    {
+      "word": "élargir",
+      "index": 639
+    },
+    {
+      "word": "électron",
+      "index": 640
+    },
+    {
+      "word": "éléphant",
+      "index": 642
+    },
+    {
+      "word": "élève",
+      "index": 643
+    },
+    {
+      "word": "éloge",
+      "index": 646
+    },
+    {
+      "word": "embellir",
+      "index": 650
+    },
+    {
+      "word": "émission",
+      "index": 653
+    },
+    {
+      "word": "émotion",
+      "index": 655
+    },
+    {
+      "word": "empereur",
+      "index": 657
+    },
+    {
+      "word": "emporter",
+      "index": 659
+    },
+    {
+      "word": "emprise",
+      "index": 660
+    },
+    {
+      "word": "endosser",
+      "index": 667
+    },
+    {
+      "word": "énergie",
+      "index": 670
+    },
+    {
+      "word": "enfance",
+      "index": 671
+    },
+    {
+      "word": "enfermer",
+      "index": 672
+    },
+    {
+      "word": "englober",
+      "index": 676
+    },
+    {
+      "word": "enjeu",
+      "index": 679
+    },
+    {
+      "word": "enrichir",
+      "index": 683
+    },
+    {
+      "word": "enseigne",
+      "index": 685
+    },
+    {
+      "word": "entendre",
+      "index": 687
+    },
+    {
+      "word": "entier",
+      "index": 688
+    },
+    {
+      "word": "entraver",
+      "index": 690
+    },
+    {
+      "word": "enviable",
+      "index": 693
+    },
+    {
+      "word": "envoyer",
+      "index": 694
+    },
+    {
+      "word": "épargne",
+      "index": 698
+    },
+    {
+      "word": "époque",
+      "index": 708
+    },
+    {
+      "word": "épreuve",
+      "index": 709
+    },
+    {
+      "word": "équipe",
+      "index": 713
+    },
+    {
+      "word": "érosion",
+      "index": 715
+    },
+    {
+      "word": "erreur",
+      "index": 716
+    },
+    {
+      "word": "espèce",
+      "index": 720
+    },
+    {
+      "word": "espoir",
+      "index": 722
+    },
+    {
+      "word": "esprit",
+      "index": 723
+    },
+    {
+      "word": "essayer",
+      "index": 725
+    },
+    {
+      "word": "essence",
+      "index": 726
+    },
+    {
+      "word": "estime",
+      "index": 729
+    },
+    {
+      "word": "étatique",
+      "index": 735
+    },
+    {
+      "word": "éteindre",
+      "index": 736
+    },
+    {
+      "word": "éternel",
+      "index": 738
+    },
+    {
+      "word": "éthique",
+      "index": 740
+    },
+    {
+      "word": "étoile",
+      "index": 744
+    },
+    {
+      "word": "étude",
+      "index": 749
+    },
+    {
+      "word": "évaluer",
+      "index": 751
+    },
+    {
+      "word": "évidence",
+      "index": 754
+    },
+    {
+      "word": "éviter",
+      "index": 755
+    },
+    {
+      "word": "évolutif",
+      "index": 756
+    },
+    {
+      "word": "exact",
+      "index": 758
+    },
+    {
+      "word": "exceller",
+      "index": 761
+    },
+    {
+      "word": "exécuter",
+      "index": 765
+    },
+    {
+      "word": "exemple",
+      "index": 766
+    },
+    {
+      "word": "exercer",
+      "index": 767
+    },
+    {
+      "word": "exigence",
+      "index": 770
+    },
+    {
+      "word": "exister",
+      "index": 772
+    },
+    {
+      "word": "explorer",
+      "index": 775
+    },
+    {
+      "word": "exprimer",
+      "index": 777
+    },
+    {
+      "word": "extraire",
+      "index": 780
+    },
+    {
+      "word": "fable",
+      "index": 782
+    },
+    {
+      "word": "facile",
+      "index": 785
+    },
+    {
+      "word": "fameux",
+      "index": 789
+    },
+    {
+      "word": "famille",
+      "index": 790
+    },
+    {
+      "word": "faveur",
+      "index": 800
+    },
+    {
+      "word": "fédérer",
+      "index": 804
+    },
+    {
+      "word": "femme",
+      "index": 806
+    },
+    {
+      "word": "figure",
+      "index": 821
+    },
+    {
+      "word": "filière",
+      "index": 824
+    },
+    {
+      "word": "filtrer",
+      "index": 828
+    },
+    {
+      "word": "financer",
+      "index": 829
+    },
+    {
+      "word": "finir",
+      "index": 830
+    },
+    {
+      "word": "fléau",
+      "index": 839
+    },
+    {
+      "word": "flèche",
+      "index": 840
+    },
+    {
+      "word": "fluctuer",
+      "index": 845
+    },
+    {
+      "word": "folie",
+      "index": 848
+    },
+    {
+      "word": "fontaine",
+      "index": 851
+    },
+    {
+      "word": "forcer",
+      "index": 852
+    },
+    {
+      "word": "formuler",
+      "index": 854
+    },
+    {
+      "word": "fortune",
+      "index": 855
+    },
+    {
+      "word": "fossile",
+      "index": 856
+    },
+    {
+      "word": "fourmi",
+      "index": 861
+    },
+    {
+      "word": "fragile",
+      "index": 862
+    },
+    {
+      "word": "frère",
+      "index": 872
+    },
+    {
+      "word": "friction",
+      "index": 874
+    },
+    {
+      "word": "froid",
+      "index": 877
+    },
+    {
+      "word": "fugitif",
+      "index": 882
+    },
+    {
+      "word": "fuite",
+      "index": 883
+    },
+    {
+      "word": "fusion",
+      "index": 887
+    },
+    {
+      "word": "futur",
+      "index": 888
+    },
+    {
+      "word": "gagner",
+      "index": 889
+    },
+    {
+      "word": "garantir",
+      "index": 893
+    },
+    {
+      "word": "géant",
+      "index": 899
+    },
+    {
+      "word": "général",
+      "index": 903
+    },
+    {
+      "word": "goutte",
+      "index": 933
+    },
+    {
+      "word": "grand",
+      "index": 937
+    },
+    {
+      "word": "groupe",
+      "index": 948
+    },
+    {
+      "word": "guide",
+      "index": 954
+    },
+    {
+      "word": "harmonie",
+      "index": 967
+    },
+    {
+      "word": "hasard",
+      "index": 969
+    },
+    {
+      "word": "hélium",
+      "index": 970
+    },
+    {
+      "word": "heureux",
+      "index": 977
+    },
+    {
+      "word": "histoire",
+      "index": 981
+    },
+    {
+      "word": "hiver",
+      "index": 982
+    },
+    {
+      "word": "hommage",
+      "index": 984
+    },
+    {
+      "word": "homogène",
+      "index": 985
+    },
+    {
+      "word": "horizon",
+      "index": 990
+    },
+    {
+      "word": "horloge",
+      "index": 991
+    },
+    {
+      "word": "humain",
+      "index": 998
+    },
+    {
+      "word": "humble",
+      "index": 999
+    },
+    {
+      "word": "humour",
+      "index": 1001
+    },
+    {
+      "word": "ignorer",
+      "index": 1008
+    },
+    {
+      "word": "illusion",
+      "index": 1011
+    },
+    {
+      "word": "image",
+      "index": 1012
+    },
+    {
+      "word": "imiter",
+      "index": 1014
+    },
+    {
+      "word": "immobile",
+      "index": 1016
+    },
+    {
+      "word": "immuable",
+      "index": 1017
+    },
+    {
+      "word": "impact",
+      "index": 1018
+    },
+    {
+      "word": "impérial",
+      "index": 1019
+    },
+    {
+      "word": "imposer",
+      "index": 1021
+    },
+    {
+      "word": "indice",
+      "index": 1030
+    },
+    {
+      "word": "infini",
+      "index": 1035
+    },
+    {
+      "word": "infliger",
+      "index": 1036
+    },
+    {
+      "word": "inscrire",
+      "index": 1047
+    },
+    {
+      "word": "intime",
+      "index": 1056
+    },
+    {
+      "word": "intuitif",
+      "index": 1058
+    },
+    {
+      "word": "inutile",
+      "index": 1059
+    },
+    {
+      "word": "inventer",
+      "index": 1061
+    },
+    {
+      "word": "isoler",
+      "index": 1068
+    },
+    {
+      "word": "janvier",
+      "index": 1074
+    },
+    {
+      "word": "jardin",
+      "index": 1075
+    },
+    {
+      "word": "jaune",
+      "index": 1077
+    },
+    {
+      "word": "jeton",
+      "index": 1080
+    },
+    {
+      "word": "jeunesse",
+      "index": 1082
+    },
+    {
+      "word": "jugement",
+      "index": 1093
+    },
+    {
+      "word": "justice",
+      "index": 1097
+    },
+    {
+      "word": "labourer",
+      "index": 1105
+    },
+    {
+      "word": "laisser",
+      "index": 1110
+    },
+    {
+      "word": "lanceur",
+      "index": 1115
+    },
+    {
+      "word": "langage",
+      "index": 1116
+    },
+    {
+      "word": "lecture",
+      "index": 1124
+    },
+    {
+      "word": "légal",
+      "index": 1125
+    },
+    {
+      "word": "lettre",
+      "index": 1129
+    },
+    {
+      "word": "levier",
+      "index": 1130
+    },
+    {
+      "word": "libérer",
+      "index": 1134
+    },
+    {
+      "word": "libre",
+      "index": 1135
+    },
+    {
+      "word": "lièvre",
+      "index": 1139
+    },
+    {
+      "word": "limite",
+      "index": 1144
+    },
+    {
+      "word": "liquide",
+      "index": 1150
+    },
+    {
+      "word": "logique",
+      "index": 1157
+    },
+    {
+      "word": "lointain",
+      "index": 1158
+    },
+    {
+      "word": "lumière",
+      "index": 1173
+    },
+    {
+      "word": "machine",
+      "index": 1179
+    },
+    {
+      "word": "magasin",
+      "index": 1180
+    },
+    {
+      "word": "magique",
+      "index": 1182
+    },
+    {
+      "word": "maintien",
+      "index": 1185
+    },
+    {
+      "word": "maison",
+      "index": 1187
+    },
+    {
+      "word": "manuel",
+      "index": 1199
+    },
+    {
+      "word": "marqueur",
+      "index": 1205
+    },
+    {
+      "word": "matériel",
+      "index": 1210
+    },
+    {
+      "word": "matière",
+      "index": 1211
+    },
+    {
+      "word": "maximal",
+      "index": 1216
+    },
+    {
+      "word": "médecin",
+      "index": 1220
+    },
+    {
+      "word": "meilleur",
+      "index": 1223
+    },
+    {
+      "word": "mélange",
+      "index": 1224
+    },
+    {
+      "word": "membre",
+      "index": 1226
+    },
+    {
+      "word": "mémoire",
+      "index": 1227
+    },
+    {
+      "word": "mensonge",
+      "index": 1231
+    },
+    {
+      "word": "mérite",
+      "index": 1234
+    },
+    {
+      "word": "messager",
+      "index": 1236
+    },
+    {
+      "word": "mesure",
+      "index": 1237
+    },
+    {
+      "word": "métal",
+      "index": 1238
+    },
+    {
+      "word": "méthode",
+      "index": 1240
+    },
+    {
+      "word": "métier",
+      "index": 1241
+    },
+    {
+      "word": "meuble",
+      "index": 1242
+    },
+    {
+      "word": "milieu",
+      "index": 1248
+    },
+    {
+      "word": "million",
+      "index": 1249
+    },
+    {
+      "word": "minute",
+      "index": 1255
+    },
+    {
+      "word": "miracle",
+      "index": 1256
+    },
+    {
+      "word": "miroiter",
+      "index": 1257
+    },
+    {
+      "word": "moderne",
+      "index": 1261
+    },
+    {
+      "word": "mondial",
+      "index": 1263
+    },
+    {
+      "word": "monnaie",
+      "index": 1265
+    },
+    {
+      "word": "montagne",
+      "index": 1268
+    },
+    {
+      "word": "moteur",
+      "index": 1274
+    },
+    {
+      "word": "motif",
+      "index": 1275
+    },
+    {
+      "word": "mouche",
+      "index": 1276
+    },
+    {
+      "word": "mutuel",
+      "index": 1292
+    },
+    {
+      "word": "mystère",
+      "index": 1295
+    },
+    {
+      "word": "nation",
+      "index": 1302
+    },
+    {
+      "word": "nature",
+      "index": 1303
+    },
+    {
+      "word": "néfaste",
+      "index": 1309
+    },
+    {
+      "word": "négation",
+      "index": 1310
+    },
+    {
+      "word": "négocier",
+      "index": 1312
+    },
+    {
+      "word": "niche",
+      "index": 1319
+    },
+    {
+      "word": "niveau",
+      "index": 1322
+    },
+    {
+      "word": "noble",
+      "index": 1323
+    },
+    {
+      "word": "nocif",
+      "index": 1324
+    },
+    {
+      "word": "nombreux",
+      "index": 1329
+    },
+    {
+      "word": "nommer",
+      "index": 1330
+    },
+    {
+      "word": "nouveau",
+      "index": 1336
+    },
+    {
+      "word": "nuage",
+      "index": 1340
+    },
+    {
+      "word": "obéir",
+      "index": 1348
+    },
+    {
+      "word": "objectif",
+      "index": 1349
+    },
+    {
+      "word": "observer",
+      "index": 1352
+    },
+    {
+      "word": "obstacle",
+      "index": 1353
+    },
+    {
+      "word": "obtenir",
+      "index": 1354
+    },
+    {
+      "word": "occasion",
+      "index": 1356
+    },
+    {
+      "word": "occuper",
+      "index": 1357
+    },
+    {
+      "word": "océan",
+      "index": 1358
+    },
+    {
+      "word": "octobre",
+      "index": 1359
+    },
+    {
+      "word": "offrir",
+      "index": 1367
+    },
+    {
+      "word": "oiseau",
+      "index": 1369
+    },
+    {
+      "word": "olivier",
+      "index": 1372
+    },
+    {
+      "word": "opaque",
+      "index": 1380
+    },
+    {
+      "word": "opérer",
+      "index": 1381
+    },
+    {
+      "word": "opinion",
+      "index": 1382
+    },
+    {
+      "word": "optique",
+      "index": 1386
+    },
+    {
+      "word": "ordonner",
+      "index": 1390
+    },
+    {
+      "word": "outil",
+      "index": 1404
+    },
+    {
+      "word": "ouvrage",
+      "index": 1406
+    },
+    {
+      "word": "oxygène",
+      "index": 1409
+    },
+    {
+      "word": "papier",
+      "index": 1424
+    },
+    {
+      "word": "paradoxe",
+      "index": 1427
+    },
+    {
+      "word": "parler",
+      "index": 1431
+    },
+    {
+      "word": "parole",
+      "index": 1432
+    },
+    {
+      "word": "partager",
+      "index": 1435
+    },
+    {
+      "word": "parvenir",
+      "index": 1437
+    },
+    {
+      "word": "passion",
+      "index": 1438
+    },
+    {
+      "word": "payer",
+      "index": 1445
+    },
+    {
+      "word": "paysage",
+      "index": 1446
+    },
+    {
+      "word": "peintre",
+      "index": 1448
+    },
+    {
+      "word": "pelouse",
+      "index": 1452
+    },
+    {
+      "word": "pénurie",
+      "index": 1458
+    },
+    {
+      "word": "période",
+      "index": 1463
+    },
+    {
+      "word": "perte",
+      "index": 1467
+    },
+    {
+      "word": "petit",
+      "index": 1470
+    },
+    {
+      "word": "peuple",
+      "index": 1472
+    },
+    {
+      "word": "photon",
+      "index": 1476
+    },
+    {
+      "word": "phrase",
+      "index": 1477
+    },
+    {
+      "word": "physique",
+      "index": 1478
+    },
+    {
+      "word": "pièce",
+      "index": 1481
+    },
+    {
+      "word": "pierre",
+      "index": 1482
+    },
+    {
+      "word": "pivoter",
+      "index": 1491
+    },
+    {
+      "word": "plafond",
+      "index": 1495
+    },
+    {
+      "word": "plaisir",
+      "index": 1496
+    },
+    {
+      "word": "plaque",
+      "index": 1498
+    },
+    {
+      "word": "pluie",
+      "index": 1506
+    },
+    {
+      "word": "poésie",
+      "index": 1509
+    },
+    {
+      "word": "position",
+      "index": 1525
+    },
+    {
+      "word": "posséder",
+      "index": 1526
+    },
+    {
+      "word": "posture",
+      "index": 1527
+    },
+    {
+      "word": "pouvoir",
+      "index": 1536
+    },
+    {
+      "word": "pratique",
+      "index": 1538
+    },
+    {
+      "word": "précieux",
+      "index": 1539
+    },
+    {
+      "word": "prédire",
+      "index": 1540
+    },
+    {
+      "word": "prélude",
+      "index": 1542
+    },
+    {
+      "word": "prénom",
+      "index": 1543
+    },
+    {
+      "word": "présence",
+      "index": 1544
+    },
+    {
+      "word": "prétexte",
+      "index": 1545
+    },
+    {
+      "word": "prévoir",
+      "index": 1546
+    },
+    {
+      "word": "primitif",
+      "index": 1547
+    },
+    {
+      "word": "problème",
+      "index": 1551
+    },
+    {
+      "word": "profond",
+      "index": 1554
+    },
+    {
+      "word": "progrès",
+      "index": 1555
+    },
+    {
+      "word": "proie",
+      "index": 1556
+    },
+    {
+      "word": "projeter",
+      "index": 1557
+    },
+    {
+      "word": "propre",
+      "index": 1560
+    },
+    {
+      "word": "protéger",
+      "index": 1562
+    },
+    {
+      "word": "public",
+      "index": 1568
+    },
+    {
+      "word": "puiser",
+      "index": 1570
+    },
+    {
+      "word": "question",
+      "index": 1581
+    },
+    {
+      "word": "racine",
+      "index": 1585
+    },
+    {
+      "word": "raconter",
+      "index": 1586
+    },
+    {
+      "word": "rapide",
+      "index": 1594
+    },
+    {
+      "word": "réagir",
+      "index": 1601
+    },
+    {
+      "word": "réaliser",
+      "index": 1602
+    },
+    {
+      "word": "recevoir",
+      "index": 1604
+    },
+    {
+      "word": "recruter",
+      "index": 1608
+    },
+    {
+      "word": "reculer",
+      "index": 1609
+    },
+    {
+      "word": "refaire",
+      "index": 1613
+    },
+    {
+      "word": "réflexe",
+      "index": 1614
+    },
+    {
+      "word": "refuge",
+      "index": 1617
+    },
+    {
+      "word": "régalien",
+      "index": 1618
+    },
+    {
+      "word": "régulier",
+      "index": 1621
+    },
+    {
+      "word": "rejeter",
+      "index": 1623
+    },
+    {
+      "word": "relatif",
+      "index": 1625
+    },
+    {
+      "word": "relever",
+      "index": 1626
+    },
+    {
+      "word": "remarque",
+      "index": 1628
+    },
+    {
+      "word": "remède",
+      "index": 1629
+    },
+    {
+      "word": "remise",
+      "index": 1630
+    },
+    {
+      "word": "remonter",
+      "index": 1631
+    },
+    {
+      "word": "remplir",
+      "index": 1632
+    },
+    {
+      "word": "renoncer",
+      "index": 1637
+    },
+    {
+      "word": "rentrer",
+      "index": 1638
+    },
+    {
+      "word": "reprise",
+      "index": 1642
+    },
+    {
+      "word": "réserve",
+      "index": 1645
+    },
+    {
+      "word": "résoudre",
+      "index": 1647
+    },
+    {
+      "word": "respect",
+      "index": 1648
+    },
+    {
+      "word": "rester",
+      "index": 1649
+    },
+    {
+      "word": "résultat",
+      "index": 1650
+    },
+    {
+      "word": "retenir",
+      "index": 1652
+    },
+    {
+      "word": "revanche",
+      "index": 1658
+    },
+    {
+      "word": "richesse",
+      "index": 1662
+    },
+    {
+      "word": "risible",
+      "index": 1669
+    },
+    {
+      "word": "risque",
+      "index": 1670
+    },
+    {
+      "word": "rivière",
+      "index": 1673
+    },
+    {
+      "word": "royaume",
+      "index": 1688
+    },
+    {
+      "word": "ruche",
+      "index": 1691
+    },
+    {
+      "word": "rythme",
+      "index": 1698
+    },
+    {
+      "word": "sagesse",
+      "index": 1704
+    },
+    {
+      "word": "salon",
+      "index": 1708
+    },
+    {
+      "word": "sanction",
+      "index": 1711
+    },
+    {
+      "word": "science",
+      "index": 1728
+    },
+    {
+      "word": "semaine",
+      "index": 1743
+    },
+    {
+      "word": "sembler",
+      "index": 1744
+    },
+    {
+      "word": "séparer",
+      "index": 1750
+    },
+    {
+      "word": "service",
+      "index": 1757
+    },
+    {
+      "word": "siècle",
+      "index": 1763
+    },
+    {
+      "word": "signal",
+      "index": 1767
+    },
+    {
+      "word": "silence",
+      "index": 1768
+    },
+    {
+      "word": "simple",
+      "index": 1770
+    },
+    {
+      "word": "situer",
+      "index": 1776
+    },
+    {
+      "word": "social",
+      "index": 1778
+    },
+    {
+      "word": "socle",
+      "index": 1779
+    },
+    {
+      "word": "soldat",
+      "index": 1782
+    },
+    {
+      "word": "soleil",
+      "index": 1783
+    },
+    {
+      "word": "solitude",
+      "index": 1784
+    },
+    {
+      "word": "sommeil",
+      "index": 1787
+    },
+    {
+      "word": "sortir",
+      "index": 1794
+    },
+    {
+      "word": "soucieux",
+      "index": 1797
+    },
+    {
+      "word": "source",
+      "index": 1802
+    },
+    {
+      "word": "sphère",
+      "index": 1808
+    },
+    {
+      "word": "stable",
+      "index": 1810
+    },
+    {
+      "word": "strict",
+      "index": 1815
+    },
+    {
+      "word": "sublime",
+      "index": 1819
+    },
+    {
+      "word": "succès",
+      "index": 1823
+    },
+    {
+      "word": "suffixe",
+      "index": 1825
+    },
+    {
+      "word": "surface",
+      "index": 1831
+    },
+    {
+      "word": "survie",
+      "index": 1836
+    },
+    {
+      "word": "suspect",
+      "index": 1837
+    },
+    {
+      "word": "système",
+      "index": 1843
+    },
+    {
+      "word": "talent",
+      "index": 1848
+    },
+    {
+      "word": "tangible",
+      "index": 1853
+    },
+    {
+      "word": "temporel",
+      "index": 1866
+    },
+    {
+      "word": "tenaille",
+      "index": 1867
+    },
+    {
+      "word": "tenir",
+      "index": 1870
+    },
+    {
+      "word": "théorie",
+      "index": 1878
+    },
+    {
+      "word": "tissu",
+      "index": 1886
+    },
+    {
+      "word": "titre",
+      "index": 1888
+    },
+    {
+      "word": "toboggan",
+      "index": 1890
+    },
+    {
+      "word": "tordre",
+      "index": 1897
+    },
+    {
+      "word": "tortue",
+      "index": 1902
+    },
+    {
+      "word": "tragique",
+      "index": 1910
+    },
+    {
+      "word": "train",
+      "index": 1912
+    },
+    {
+      "word": "travail",
+      "index": 1914
+    },
+    {
+      "word": "trésor",
+      "index": 1917
+    },
+    {
+      "word": "triomphe",
+      "index": 1923
+    },
+    {
+      "word": "typique",
+      "index": 1941
+    },
+    {
+      "word": "ubuesque",
+      "index": 1943
+    },
+    {
+      "word": "ultime",
+      "index": 1944
+    },
+    {
+      "word": "union",
+      "index": 1948
+    },
+    {
+      "word": "unique",
+      "index": 1949
+    },
+    {
+      "word": "univers",
+      "index": 1951
+    },
+    {
+      "word": "uranium",
+      "index": 1952
+    },
+    {
+      "word": "usage",
+      "index": 1955
+    },
+    {
+      "word": "usure",
+      "index": 1958
+    },
+    {
+      "word": "utile",
+      "index": 1959
+    },
+    {
+      "word": "vaincre",
+      "index": 1966
+    },
+    {
+      "word": "valise",
+      "index": 1969
+    },
+    {
+      "word": "vapeur",
+      "index": 1974
+    },
+    {
+      "word": "varier",
+      "index": 1975
+    },
+    {
+      "word": "vaste",
+      "index": 1978
+    },
+    {
+      "word": "véhicule",
+      "index": 1982
+    },
+    {
+      "word": "vertu",
+      "index": 1995
+    },
+    {
+      "word": "vidéo",
+      "index": 2005
+    },
+    {
+      "word": "vision",
+      "index": 2018
+    },
+    {
+      "word": "vitesse",
+      "index": 2022
+    },
+    {
+      "word": "vocation",
+      "index": 2027
+    },
+    {
+      "word": "voile",
+      "index": 2029
+    },
+    {
+      "word": "voisin",
+      "index": 2030
+    },
+    {
+      "word": "voiture",
+      "index": 2031
+    },
+    {
+      "word": "voter",
+      "index": 2038
+    },
+    {
+      "word": "vouloir",
+      "index": 2039
+    },
+    {
+      "word": "voyage",
+      "index": 2040
+    }
+  ],
+  "words_summary": [
+    "abdiquer(3)",
+    "abolir(5)",
+    "aboutir(7)",
+    "absence(14)",
+    "absolu(15)",
+    "absurde(16)",
+    "accepter(23)",
+    "accuser(27)",
+    "achat(29)",
+    "acheter(30)",
+    "acier(32)",
+    "acquérir(34)",
+    "actif(37)",
+    "admettre(44)",
+    "adopter(46)",
+    "adulte(51)",
+    "affaire(55)",
+    "affecter(56)",
+    "affiche(57)",
+    "agréable(65)",
+    "aider(67)",
+    "aimable(70)",
+    "aisance(71)",
+    "ajouter(72)",
+    "ajuster(73)",
+    "alerte(76)",
+    "amateur(89)",
+    "amour(97)",
+    "analyse(102)",
+    "anarchie(104)",
+    "ancien(106)",
+    "anéantir(107)",
+    "angle(108)",
+    "animal(111)",
+    "annonce(113)",
+    "anonyme(117)",
+    "anxieux(121)",
+    "appareil(126)",
+    "appuyer(129)",
+    "arbitre(132)",
+    "argent(136)",
+    "armement(139)",
+    "arriver(144)",
+    "article(148)",
+    "aspect(149)",
+    "aspirer(151)",
+    "asservir(153)",
+    "associer(155)",
+    "assurer(156)",
+    "atelier(160)",
+    "atome(161)",
+    "attaque(164)",
+    "attirer(166)",
+    "avancer(177)",
+    "avenir(179)",
+    "aveugle(181)",
+    "avide(183)",
+    "avion(184)",
+    "baguette(194)",
+    "bancaire(201)",
+    "banquier(205)",
+    "barque(209)",
+    "barrage(210)",
+    "bateau(214)",
+    "bénéfice(221)",
+    "bétail(228)",
+    "bilan(234)",
+    "binaire(237)",
+    "bonheur(261)",
+    "bourse(272)",
+    "boutique(274)",
+    "branche(276)",
+    "cadeau(309)",
+    "cadre(310)",
+    "calculer(314)",
+    "calmer(317)",
+    "capable(329)",
+    "capter(333)",
+    "carbone(336)",
+    "causer(347)",
+    "censurer(357)",
+    "central(358)",
+    "cercle(359)",
+    "cerveau(363)",
+    "chaleur(367)",
+    "chambre(368)",
+    "chapitre(370)",
+    "charbon(371)",
+    "chasseur(372)",
+    "chercher(379)",
+    "chien(381)",
+    "chiffre(382)",
+    "chimère(384)",
+    "choisir(388)",
+    "chose(389)",
+    "cimenter(395)",
+    "circuler(398)",
+    "citoyen(402)",
+    "civil(404)",
+    "classe(408)",
+    "climat(412)",
+    "cohésion(425)",
+    "comédie(434)",
+    "confier(439)",
+    "corpus(451)",
+    "correct(452)",
+    "cosmique(454)",
+    "crainte(464)",
+    "cristal(474)",
+    "critère(475)",
+    "croire(476)",
+    "crucial(479)",
+    "cuivre(486)",
+    "cycle(494)",
+    "danger(499)",
+    "débattre(502)",
+    "décembre(508)",
+    "décider(510)",
+    "déclarer(511)",
+    "décrire(513)",
+    "demander(528)",
+    "dépenser(536)",
+    "déplacer(538)",
+    "descente(543)",
+    "désert(544)",
+    "désigner(545)",
+    "devenir(554)",
+    "devoir(556)",
+    "dialogue(558)",
+    "dicter(560)",
+    "différer(561)",
+    "digital(563)",
+    "diminuer(567)",
+    "dioxyde(568)",
+    "diriger(570)",
+    "disposer(572)",
+    "dissiper(573)",
+    "distance(574)",
+    "diviser(576)",
+    "domaine(581)",
+    "domicile(582)",
+    "donner(586)",
+    "dopamine(587)",
+    "double(595)",
+    "douter(597)",
+    "durable(606)",
+    "écarter(610)",
+    "échelle(612)",
+    "école(617)",
+    "économie(618)",
+    "écrivain(623)",
+    "écureuil(626)",
+    "effacer(629)",
+    "effort(632)",
+    "élargir(639)",
+    "électron(640)",
+    "éléphant(642)",
+    "élève(643)",
+    "éloge(646)",
+    "embellir(650)",
+    "émission(653)",
+    "émotion(655)",
+    "empereur(657)",
+    "emporter(659)",
+    "emprise(660)",
+    "endosser(667)",
+    "énergie(670)",
+    "enfance(671)",
+    "enfermer(672)",
+    "englober(676)",
+    "enjeu(679)",
+    "enrichir(683)",
+    "enseigne(685)",
+    "entendre(687)",
+    "entier(688)",
+    "entraver(690)",
+    "enviable(693)",
+    "envoyer(694)",
+    "épargne(698)",
+    "époque(708)",
+    "épreuve(709)",
+    "équipe(713)",
+    "érosion(715)",
+    "erreur(716)",
+    "espèce(720)",
+    "espoir(722)",
+    "esprit(723)",
+    "essayer(725)",
+    "essence(726)",
+    "estime(729)",
+    "étatique(735)",
+    "éteindre(736)",
+    "éternel(738)",
+    "éthique(740)",
+    "étoile(744)",
+    "étude(749)",
+    "évaluer(751)",
+    "évidence(754)",
+    "éviter(755)",
+    "évolutif(756)",
+    "exact(758)",
+    "exceller(761)",
+    "exécuter(765)",
+    "exemple(766)",
+    "exercer(767)",
+    "exigence(770)",
+    "exister(772)",
+    "explorer(775)",
+    "exprimer(777)",
+    "extraire(780)",
+    "fable(782)",
+    "facile(785)",
+    "fameux(789)",
+    "famille(790)",
+    "faveur(800)",
+    "fédérer(804)",
+    "femme(806)",
+    "figure(821)",
+    "filière(824)",
+    "filtrer(828)",
+    "financer(829)",
+    "finir(830)",
+    "fléau(839)",
+    "flèche(840)",
+    "fluctuer(845)",
+    "folie(848)",
+    "fontaine(851)",
+    "forcer(852)",
+    "formuler(854)",
+    "fortune(855)",
+    "fossile(856)",
+    "fourmi(861)",
+    "fragile(862)",
+    "frère(872)",
+    "friction(874)",
+    "froid(877)",
+    "fugitif(882)",
+    "fuite(883)",
+    "fusion(887)",
+    "futur(888)",
+    "gagner(889)",
+    "garantir(893)",
+    "géant(899)",
+    "général(903)",
+    "goutte(933)",
+    "grand(937)",
+    "groupe(948)",
+    "guide(954)",
+    "harmonie(967)",
+    "hasard(969)",
+    "hélium(970)",
+    "heureux(977)",
+    "histoire(981)",
+    "hiver(982)",
+    "hommage(984)",
+    "homogène(985)",
+    "horizon(990)",
+    "horloge(991)",
+    "humain(998)",
+    "humble(999)",
+    "humour(1001)",
+    "ignorer(1008)",
+    "illusion(1011)",
+    "image(1012)",
+    "imiter(1014)",
+    "immobile(1016)",
+    "immuable(1017)",
+    "impact(1018)",
+    "impérial(1019)",
+    "imposer(1021)",
+    "indice(1030)",
+    "infini(1035)",
+    "infliger(1036)",
+    "inscrire(1047)",
+    "intime(1056)",
+    "intuitif(1058)",
+    "inutile(1059)",
+    "inventer(1061)",
+    "isoler(1068)",
+    "janvier(1074)",
+    "jardin(1075)",
+    "jaune(1077)",
+    "jeton(1080)",
+    "jeunesse(1082)",
+    "jugement(1093)",
+    "justice(1097)",
+    "labourer(1105)",
+    "laisser(1110)",
+    "lanceur(1115)",
+    "langage(1116)",
+    "lecture(1124)",
+    "légal(1125)",
+    "lettre(1129)",
+    "levier(1130)",
+    "libérer(1134)",
+    "libre(1135)",
+    "lièvre(1139)",
+    "limite(1144)",
+    "liquide(1150)",
+    "logique(1157)",
+    "lointain(1158)",
+    "lumière(1173)",
+    "machine(1179)",
+    "magasin(1180)",
+    "magique(1182)",
+    "maintien(1185)",
+    "maison(1187)",
+    "manuel(1199)",
+    "marqueur(1205)",
+    "matériel(1210)",
+    "matière(1211)",
+    "maximal(1216)",
+    "médecin(1220)",
+    "meilleur(1223)",
+    "mélange(1224)",
+    "membre(1226)",
+    "mémoire(1227)",
+    "mensonge(1231)",
+    "mérite(1234)",
+    "messager(1236)",
+    "mesure(1237)",
+    "métal(1238)",
+    "méthode(1240)",
+    "métier(1241)",
+    "meuble(1242)",
+    "milieu(1248)",
+    "million(1249)",
+    "minute(1255)",
+    "miracle(1256)",
+    "miroiter(1257)",
+    "moderne(1261)",
+    "mondial(1263)",
+    "monnaie(1265)",
+    "montagne(1268)",
+    "moteur(1274)",
+    "motif(1275)",
+    "mouche(1276)",
+    "mutuel(1292)",
+    "mystère(1295)",
+    "nation(1302)",
+    "nature(1303)",
+    "néfaste(1309)",
+    "négation(1310)",
+    "négocier(1312)",
+    "niche(1319)",
+    "niveau(1322)",
+    "noble(1323)",
+    "nocif(1324)",
+    "nombreux(1329)",
+    "nommer(1330)",
+    "nouveau(1336)",
+    "nuage(1340)",
+    "obéir(1348)",
+    "objectif(1349)",
+    "observer(1352)",
+    "obstacle(1353)",
+    "obtenir(1354)",
+    "occasion(1356)",
+    "occuper(1357)",
+    "océan(1358)",
+    "octobre(1359)",
+    "offrir(1367)",
+    "oiseau(1369)",
+    "olivier(1372)",
+    "opaque(1380)",
+    "opérer(1381)",
+    "opinion(1382)",
+    "optique(1386)",
+    "ordonner(1390)",
+    "outil(1404)",
+    "ouvrage(1406)",
+    "oxygène(1409)",
+    "papier(1424)",
+    "paradoxe(1427)",
+    "parler(1431)",
+    "parole(1432)",
+    "partager(1435)",
+    "parvenir(1437)",
+    "passion(1438)",
+    "payer(1445)",
+    "paysage(1446)",
+    "peintre(1448)",
+    "pelouse(1452)",
+    "pénurie(1458)",
+    "période(1463)",
+    "perte(1467)",
+    "petit(1470)",
+    "peuple(1472)",
+    "photon(1476)",
+    "phrase(1477)",
+    "physique(1478)",
+    "pièce(1481)",
+    "pierre(1482)",
+    "pivoter(1491)",
+    "plafond(1495)",
+    "plaisir(1496)",
+    "plaque(1498)",
+    "pluie(1506)",
+    "poésie(1509)",
+    "position(1525)",
+    "posséder(1526)",
+    "posture(1527)",
+    "pouvoir(1536)",
+    "pratique(1538)",
+    "précieux(1539)",
+    "prédire(1540)",
+    "prélude(1542)",
+    "prénom(1543)",
+    "présence(1544)",
+    "prétexte(1545)",
+    "prévoir(1546)",
+    "primitif(1547)",
+    "problème(1551)",
+    "profond(1554)",
+    "progrès(1555)",
+    "proie(1556)",
+    "projeter(1557)",
+    "propre(1560)",
+    "protéger(1562)",
+    "public(1568)",
+    "puiser(1570)",
+    "question(1581)",
+    "racine(1585)",
+    "raconter(1586)",
+    "rapide(1594)",
+    "réagir(1601)",
+    "réaliser(1602)",
+    "recevoir(1604)",
+    "recruter(1608)",
+    "reculer(1609)",
+    "refaire(1613)",
+    "réflexe(1614)",
+    "refuge(1617)",
+    "régalien(1618)",
+    "régulier(1621)",
+    "rejeter(1623)",
+    "relatif(1625)",
+    "relever(1626)",
+    "remarque(1628)",
+    "remède(1629)",
+    "remise(1630)",
+    "remonter(1631)",
+    "remplir(1632)",
+    "renoncer(1637)",
+    "rentrer(1638)",
+    "reprise(1642)",
+    "réserve(1645)",
+    "résoudre(1647)",
+    "respect(1648)",
+    "rester(1649)",
+    "résultat(1650)",
+    "retenir(1652)",
+    "revanche(1658)",
+    "richesse(1662)",
+    "risible(1669)",
+    "risque(1670)",
+    "rivière(1673)",
+    "royaume(1688)",
+    "ruche(1691)",
+    "rythme(1698)",
+    "sagesse(1704)",
+    "salon(1708)",
+    "sanction(1711)",
+    "science(1728)",
+    "semaine(1743)",
+    "sembler(1744)",
+    "séparer(1750)",
+    "service(1757)",
+    "siècle(1763)",
+    "signal(1767)",
+    "silence(1768)",
+    "simple(1770)",
+    "situer(1776)",
+    "social(1778)",
+    "socle(1779)",
+    "soldat(1782)",
+    "soleil(1783)",
+    "solitude(1784)",
+    "sommeil(1787)",
+    "sortir(1794)",
+    "soucieux(1797)",
+    "source(1802)",
+    "sphère(1808)",
+    "stable(1810)",
+    "strict(1815)",
+    "sublime(1819)",
+    "succès(1823)",
+    "suffixe(1825)",
+    "surface(1831)",
+    "survie(1836)",
+    "suspect(1837)",
+    "système(1843)",
+    "talent(1848)",
+    "tangible(1853)",
+    "temporel(1866)",
+    "tenaille(1867)",
+    "tenir(1870)",
+    "théorie(1878)",
+    "tissu(1886)",
+    "titre(1888)",
+    "toboggan(1890)",
+    "tordre(1897)",
+    "tortue(1902)",
+    "tragique(1910)",
+    "train(1912)",
+    "travail(1914)",
+    "trésor(1917)",
+    "triomphe(1923)",
+    "typique(1941)",
+    "ubuesque(1943)",
+    "ultime(1944)",
+    "union(1948)",
+    "unique(1949)",
+    "univers(1951)",
+    "uranium(1952)",
+    "usage(1955)",
+    "usure(1958)",
+    "utile(1959)",
+    "vaincre(1966)",
+    "valise(1969)",
+    "vapeur(1974)",
+    "varier(1975)",
+    "vaste(1978)",
+    "véhicule(1982)",
+    "vertu(1995)",
+    "vidéo(2005)",
+    "vision(2018)",
+    "vitesse(2022)",
+    "vocation(2027)",
+    "voile(2029)",
+    "voisin(2030)",
+    "voiture(2031)",
+    "voter(2038)",
+    "vouloir(2039)",
+    "voyage(2040)"
+  ]
+}
