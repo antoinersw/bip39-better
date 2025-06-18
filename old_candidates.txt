@@ -154,8 +154,6 @@ var wordCandidates = [][]string{
 	{"always"}, // 1
 
 }
-
-
 var wordCandidates = [][]string{
 // //  erase oven prevent  father  noise reward level blouse rotate admit helmet mansion
 	{"échelle"},
@@ -183,5 +181,41 @@ var wordCandidates = [][]string{
 	{"thème", "central", "pièce", "monnaie"},                                                                                            // position 21
 	{"open","always"},   // position 22
 	{"always","open"}, // position 23
+
+}
+
+var wordCandidates = [][]string{
+	// erase miss oven father noise reward level blouse rotate admit helmet mansion rice very believe woman deny calm army fade alpha open always
+	// 14 premiers mots
+	{"erase"}, // 0.449
+	{"miss"},  // 0.274
+	{"oven"},
+	{"father"},  // 0.417
+	{"noise"},   // 0.358
+	{"reward"},  // 0.387
+	{"level"},   // 0.34
+	{"blouse"},  // 0.288
+	{"rotate"},  // 0.328          // 0.328
+	{"admit"},   // 0.328
+	{"helmet"},  // 0.21
+	{"mansion"}, // 0.371
+	// couverture
+	{"rice"},
+	{"very"},
+	// 14 premiers mots end
+	// année olympique
+	{"believe"},
+	{"woman"},
+	// lien avec le nom de l'auteur
+	{"deny"}, // 0.66
+	// sommaire
+	{"calm"}, // position 17
+	{"army"}, // position 18
+	// début d'un chapitre qui traite d'un thème central du livre.
+	{"fade"},
+	{"alpha"},
+	// slogan
+	{"open"},   // 1
+	{"always"}, // 1
 
 }

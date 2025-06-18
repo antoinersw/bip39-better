@@ -75,22 +75,37 @@ var (
 	wordValid             = flag.String("word_valid", "", "Comma-separated list of words that must remain valid")
 	basePhraseFlag        = flag.String("phrase", "", "Base phrase of 23 words for bit optimization")
 	jsonDirFlag           = flag.String("json-dir", "", "Directory containing JSON files with wordCandidates")
+	massiveParallelism    = flag.Bool("massive", false, "Enable massive parallelism mode with batch processing")
+	skipDuplicateCheck    = flag.Bool("no-dup-check", false, "Skip duplicate word checking for maximum performance")
 	fuzzyPositionsList    []int
 	fuzzyLtdPositionsList []int
 	wordValidList         []string
 )
 
-// Object pools for performance optimization
+// **POOLS ANTI-GC OPTIMISÉS** - Dimensionnés pour éviter les réallocations
 var (
 	usedWordsPool = sync.Pool{
 		New: func() interface{} {
-			return make(map[string]bool, 25)
+			return make(map[string]bool, 2048) // Beaucoup plus grand pour éviter resize
 		},
 	}
 
 	stringSlicePool = sync.Pool{
 		New: func() interface{} {
-			return make([]string, 0, 24)
+			return make([]string, 0, 100) // Plus grand pour éviter append
+		},
+	}
+
+	// Nouveaux pools pour optimisations supplémentaires
+	intSlicePool = sync.Pool{
+		New: func() interface{} {
+			return make([]int, 0, 23) // Pour les phrase bits
+		},
+	}
+
+	wordBufferPool = sync.Pool{
+		New: func() interface{} {
+			return make([]string, 24) // Buffer pour mnemonic complète
 		},
 	}
 )
@@ -148,38 +163,32 @@ func convertWordCandidatesToBits(candidates [][]string, reverseWords map[string]
 // Word candidates for each position (only 23 positions - last word will be from CHECKSUM_WORDS)
 // These will be converted to bits during initialization
 var wordCandidates = [][]string{
-	// erase miss oven father noise reward level blouse rotate admit helmet mansion rice very believe woman deny calm army fade alpha open always
-	// 14 premiers mots
-	{"erase"}, // 0.449
-	{"miss"},  // 0.274
-	{"oven"},
-	{"father"},  // 0.417
-	{"noise"},   // 0.358
-	{"reward"},  // 0.387
-	{"level"},   // 0.34
-	{"blouse"},  // 0.288
-	{"rotate"},  // 0.328          // 0.328
-	{"admit"},   // 0.328
-	{"helmet"},  // 0.21
-	{"mansion"}, // 0.371
-	// couverture
-	{"rice"},
-	{"very"},
-	// 14 premiers mots end
-	// année olympique
-	{"believe"},
-	{"woman"},
-	// lien avec le nom de l'auteur
-	{"deny"}, // 0.66
-	// sommaire
-	{"calm"}, // position 17
-	{"army"}, // position 18
-	// début d'un chapitre qui traite d'un thème central du livre.
-	{"fade"},
-	{"alpha"},
-	// slogan
-	{"open"},   // 1
-	{"always"}, // 1
+	// //  erase oven prevent  father  noise reward level blouse rotate admit helmet mansion
+	{"échelle"},
+	{"mondial"},
+	{"odeur"},
+	{"énergie"},
+
+	{"physique"},
+	{"bilan"},
+	{"indice"},
+	{"acheter"},
+	{"pluie"},
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+	{"énergie", "monnaie", "pierre"}, // position 13
+	{"monnaie", "énergie", "pierre"}, // position 14
+	// virés : médaille, utopie
+	{"louve", "olivier", "flamme", "humain", "montagne", "étoile", "torche", "dragon"},                                                  // position 15
+	{"louve", "olivier", "flamme", "humain", "montagne", "étoile", "torche", "dragon"},                                                  // position 16
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 18
+	{"économie", "amour", "bonheur", "science", "énergie", "lecture", "histoire", "ordonner", "chapitre", "titre", "chiffre", "numéro"}, // position 19
+	{"thème", "central", "pièce", "monnaie"}, // position 20
+	{"thème", "central", "pièce", "monnaie"}, // position 21
+	{"open", "always"},                       // position 22
+	{"always", "open"},                       // position 23
 
 }
 
@@ -213,6 +222,12 @@ type WorkItem struct {
 	phraseNumber int64
 }
 
+// BatchWorkItem for massive parallelism - contains multiple phrases to process
+type BatchWorkItem struct {
+	phrases     [][]int // Multiple phrases (each phrase is 23 ints)
+	startNumber int64
+}
+
 // Utility functions for pool management
 func getUsedWordsMap() map[string]bool {
 	m := usedWordsPool.Get().(map[string]bool)
@@ -235,6 +250,41 @@ func getStringSlice() []string {
 func putStringSlice(s []string) {
 	if cap(s) > 0 { // Éviter de remettre des slices vides dans le pool
 		stringSlicePool.Put(s)
+	}
+}
+
+// Nouvelles fonctions pour les pools optimisés
+func getIntSlice() []int {
+	s := intSlicePool.Get().([]int)
+	return s[:0] // Reset length but keep capacity
+}
+
+func putIntSlice(s []int) {
+	if cap(s) > 0 {
+		intSlicePool.Put(s)
+	}
+}
+
+func getWordBuffer() []string {
+	return wordBufferPool.Get().([]string)
+}
+
+func putWordBuffer(s []string) {
+	// Nettoyer le buffer avant de le remettre
+	for i := range s {
+		s[i] = ""
+	}
+	wordBufferPool.Put(s)
+}
+
+// initializePools initializes object pools for better performance
+func initializePools() {
+	// Pré-remplir les pools pour éviter les allocations au démarrage
+	for i := 0; i < 100; i++ {
+		putStringSlice(make([]string, 0, 100))
+		putIntSlice(make([]int, 0, 23))
+		putWordBuffer(make([]string, 24))
+		putUsedWordsMap(make(map[string]bool, 2048))
 	}
 }
 
@@ -917,8 +967,6 @@ func computeChecksumFast(entropy256 *big.Int) int {
 	return int(hash[0])
 }
 
- 
-
 func deriveSeed(mnemonic, password string) []byte {
 	return pbkdf2.Key(
 		[]byte(mnemonic),
@@ -1044,17 +1092,37 @@ func performanceLogger() {
 		elapsed := now.Sub(startTime)
 		elapsedSinceLastLog := now.Sub(lastLogTime)
 
+		// Vérification de sanité pour éviter les durées aberrantes
+		if elapsed.Hours() > 24*365 { // Plus d'un an, quelque chose ne va pas
+			fmt.Printf("⚠️ Durée aberrante détectée (%v), réinitialisation du timer\n", elapsed)
+			startTime = now.Add(-1 * time.Minute) // Réinitialiser à 1 minute dans le passé
+			lastLogTime = now.Add(-30 * time.Second)
+			elapsed = time.Minute
+			elapsedSinceLastLog = 30 * time.Second
+		}
+
 		currentAttempts := atomic.LoadInt64(&attemptCount)
 		currentChecksumTests := atomic.LoadInt64(&checksumTestCount)
 
 		// Calculer phrases par seconde depuis le dernier log
 		attemptsDelta := currentAttempts - lastAttempts
 		checksumDelta := currentChecksumTests - lastChecksumTests
-		phrasesPerSecond := float64(attemptsDelta) / elapsedSinceLastLog.Seconds()
-		checksumPerSecond := float64(checksumDelta) / elapsedSinceLastLog.Seconds()
+
+		// Éviter la division par zéro et les très petites durées
+		elapsedSeconds := elapsedSinceLastLog.Seconds()
+		if elapsedSeconds < 0.1 {
+			elapsedSeconds = 0.1 // Minimum 100ms pour éviter les divisions par zéro
+		}
+
+		phrasesPerSecond := float64(attemptsDelta) / elapsedSeconds
+		checksumPerSecond := float64(checksumDelta) / elapsedSeconds
 
 		// Calculer le taux moyen
-		overallPhraseRate := float64(currentAttempts) / elapsed.Seconds()
+		totalElapsedSeconds := elapsed.Seconds()
+		if totalElapsedSeconds < 0.1 {
+			totalElapsedSeconds = 0.1
+		}
+		overallPhraseRate := float64(currentAttempts) / totalElapsedSeconds
 
 		// Calculer progression
 		progressPercent := float64(currentAttempts) / float64(totalCombinations) * 100.0
@@ -1062,8 +1130,8 @@ func performanceLogger() {
 		// Temps estimé restant
 		remaining := totalCombinations - currentAttempts
 		var estimatedTimeLeft time.Duration
-		if phrasesPerSecond > 0 {
-			estimatedTimeLeft = time.Duration(float64(remaining)/phrasesPerSecond) * time.Second
+		if overallPhraseRate > 0 {
+			estimatedTimeLeft = time.Duration(float64(remaining)/overallPhraseRate) * time.Second
 		}
 
 		// Statistiques mémoire et GC
@@ -1072,15 +1140,25 @@ func performanceLogger() {
 
 		// Détecter les problèmes de performance
 		performanceWarning := ""
-		if phrasesPerSecond < overallPhraseRate*0.5 {
+
+		// Détecter si le programme est bloqué (aucun progrès)
+		if attemptsDelta == 0 && currentAttempts > 0 {
+			performanceWarning = " 🚫 BLOQUÉ"
+		} else if phrasesPerSecond < overallPhraseRate*0.5 && overallPhraseRate > 1 {
 			performanceWarning = " ⚠️ PERF DROP"
 		}
+
 		if m.NumGC > gcCount {
 			gcCount = m.NumGC
 			performanceWarning += " 🗑️ GC"
 		}
 		if m.Alloc > maxMemUsed {
 			maxMemUsed = m.Alloc
+		}
+
+		// Détecter une mémoire excessive
+		if m.Alloc > 500*1024*1024 { // > 500MB
+			performanceWarning += " 💾 HIGH_MEM"
 		}
 
 		// Affichage compact des stats avec monitoring + meilleur score
@@ -1090,13 +1168,33 @@ func performanceLogger() {
 			bestScoreInfo = fmt.Sprintf(" | 🎯 Best: %d/8", currentBestScore)
 		}
 
-		fmt.Printf("📊 [%s] %.2f%% | %s/%s phrases | %.0f p/s | %s tests/s | ETA: %s | MEM: %s%s%s\n",
+		// Formater les vitesses de façon plus lisible
+		var phrasesRateStr, checksumRateStr string
+		if overallPhraseRate >= 1000 {
+			phrasesRateStr = formatNumber(int64(overallPhraseRate)) + "/s"
+		} else if overallPhraseRate >= 1 {
+			phrasesRateStr = fmt.Sprintf("%.1f/s", overallPhraseRate)
+		} else if overallPhraseRate >= 0.1 {
+			phrasesRateStr = fmt.Sprintf("%.2f/s", overallPhraseRate)
+		} else {
+			phrasesRateStr = fmt.Sprintf("%.3f/s", overallPhraseRate)
+		}
+
+		if checksumPerSecond >= 1000 {
+			checksumRateStr = formatNumber(int64(checksumPerSecond)) + "/s"
+		} else if checksumPerSecond >= 1 {
+			checksumRateStr = fmt.Sprintf("%.1f/s", checksumPerSecond)
+		} else {
+			checksumRateStr = fmt.Sprintf("%.2f/s", checksumPerSecond)
+		}
+
+		fmt.Printf("📊 [%s] %.3f%% | %s/%s phrases | %s | %s tests | ETA: %s | MEM: %s%s%s\n",
 			formatDuration(elapsed),
 			progressPercent,
 			formatNumber(currentAttempts),
 			formatNumber(totalCombinations),
-			overallPhraseRate,
-			formatNumber(int64(checksumPerSecond)),
+			phrasesRateStr,
+			checksumRateStr,
 			formatDuration(estimatedTimeLeft),
 			formatMemory(m.Alloc),
 			performanceWarning,
@@ -1202,6 +1300,182 @@ func applyReverseMode(candidates [][]string) [][]string {
 	}
 
 	return reversed
+}
+
+// batchWorker processes batches of phrases for maximum parallelism
+func batchWorker(workerID int, workChan <-chan BatchWorkItem, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// **ANTI-GC OPTIMISATIONS MASSIVES** - Pré-allouer TOUT pour éviter les allocations
+	validChecksumWords := make([]string, 0, 8)
+	phrase23Words := make([]string, 23)
+
+	// Buffers réutilisables pour éviter TOUTE allocation temporaire
+	localAttempts := int64(0)
+	localChecksumTests := int64(0)
+
+	// Buffer pour les conversions bits->mots (réutilisé à chaque fois)
+	tempWordBuffer := make([]string, 24) // Buffer pour mnemonic complète
+
+	// Batch les updates atomiques pour réduire la contention atomique
+	const UPDATE_BATCH_SIZE = 5000 // Plus gros batch = moins de contention
+
+	for batch := range workChan {
+		if atomic.LoadInt32(&foundResult) == 1 {
+			return
+		}
+
+		// Process each phrase in the batch
+		for i, phrase23Bits := range batch.phrases {
+			if atomic.LoadInt32(&foundResult) == 1 {
+				return
+			}
+
+			phraseNumber := batch.startNumber + int64(i)
+
+			// Reset slice for reuse
+			validChecksumWords = validChecksumWords[:0]
+
+			// **OPTIMISATION MASSIVE** : Pré-calculer l'entropy une seule fois
+			entropy253 := computePhrase23Entropy(phrase23Bits)
+
+			// Tester cette phrase de 23 bits avec chacun des 8 bits checksum (ultra-rapide)
+			for _, checksumBits := range CHECKSUM_BITS {
+				localChecksumTests++ // Compter localement pour réduire la contention
+
+				// Test ultra-rapide avec entropy pré-calculée
+				if isChecksumValidForEntropy(entropy253, checksumBits) {
+					checksumWord := bitsToWord(checksumBits, wordList)
+					validChecksumWords = append(validChecksumWords, checksumWord)
+				}
+			}
+
+			// Tracker le meilleur score (performance optimisée avec atomic)
+			currentScore := int32(len(validChecksumWords))
+			if currentScore > 0 {
+				currentBestScore := atomic.LoadInt32(&bestScore)
+				if currentScore > currentBestScore {
+					if atomic.CompareAndSwapInt32(&bestScore, currentBestScore, currentScore) {
+						// Nouveau meilleur score ! Reconstituer phrase pour sauvegarde
+						for j, bits := range phrase23Bits {
+							phrase23Words[j] = bitsToWord(bits, wordList)
+						}
+						phraseString := strings.Join(phrase23Words, " ")
+
+						bestPhraseMutex.Lock()
+						bestPhrase = phraseString
+						bestPhraseMutex.Unlock()
+					}
+				}
+			}
+
+			// Sauvegarder automatiquement les phrases avec score > 3
+			if len(validChecksumWords) > 3 {
+				// Reconstituer phrase seulement si nécessaire (réutiliser buffer)
+				if phrase23Words[0] == "" {
+					for j, bits := range phrase23Bits {
+						phrase23Words[j] = bitsToWord(bits, wordList)
+					}
+				}
+
+				// Utiliser buffer temporaire pour éviter allocation de strings.Join
+				copy(tempWordBuffer[:23], phrase23Words)
+				phraseString := strings.Join(tempWordBuffer[:23], " ")
+
+				// Vérifier si on a déjà sauvegardé cette phrase (éviter les doublons)
+				highScoreMutex.Lock()
+				alreadySaved := savedHighScores[phraseString]
+				if !alreadySaved {
+					savedHighScores[phraseString] = true
+				}
+				highScoreMutex.Unlock()
+
+				if !alreadySaved {
+					// Sauvegarder immédiatement
+					err := saveHighScorePhrase(phrase23Words, validChecksumWords)
+					if err == nil {
+						fmt.Printf("💾 [W%d] Sauvé: %d/8 checksums -> high_scores_live.jsonl\n",
+							workerID, len(validChecksumWords))
+					}
+				}
+			}
+
+			// Vérifier si TOUS les 8 checksum words sont valides
+			if len(validChecksumWords) == 8 {
+				// EPIC WIN! Cette phrase valide TOUS les 8 checksums!
+				if atomic.CompareAndSwapInt32(&foundResult, 0, 1) {
+					// Reconstituer phrase complète
+					for j, bits := range phrase23Bits {
+						phrase23Words[j] = bitsToWord(bits, wordList)
+					}
+
+					firstValidMnemonic := strings.Join(phrase23Words, " ") + " " + validChecksumWords[0]
+					seed := deriveSeed(firstValidMnemonic, "")
+					address := deriveBitcoinAddress(seed)
+
+					totalTime := time.Since(startTime)
+					finalPhraseRate := float64(phraseNumber) / totalTime.Seconds()
+					finalChecksumRate := float64(atomic.LoadInt64(&checksumTestCount)) / totalTime.Seconds()
+
+					fmt.Println("\n\n🎉🎉🎉 EPIC WIN! 🎉🎉🎉")
+					fmt.Printf("✅ PHRASE VALIDANT TOUS LES 8 CHECKSUMS TROUVÉE!\n")
+					fmt.Printf("📝 Base phrase (23 mots): %s\n", strings.Join(phrase23Words, " "))
+					fmt.Printf("🔤 TOUS les 8 mots checksum sont valides: %v\n", validChecksumWords)
+					fmt.Printf("💎 Exemple mnemonic complète: %s\n", firstValidMnemonic)
+					fmt.Printf("🔑 Seed: %x\n", seed)
+					fmt.Printf("🏦 Bitcoin Address (BIP84): %s\n", address)
+					fmt.Printf("🎯 Trouvée par worker %d après %s phrases\n", workerID, formatNumber(phraseNumber))
+					fmt.Printf("⏰ Temps total: %s\n", formatDuration(totalTime))
+					fmt.Printf("⚡ Taux final: %.0f phrases/sec | %.0f tests/sec\n", finalPhraseRate, finalChecksumRate)
+
+					// Sauvegarder le résultat
+					result := Result{
+						Mnemonic:           firstValidMnemonic,
+						Seed:               fmt.Sprintf("%x", seed),
+						Address:            address,
+						DerivationPath:     "m/84'/0'/0'/0/0",
+						ValidChecksumWords: validChecksumWords,
+						FuzzyMode:          *fuzzyMode,
+						FuzzyPositions:     fuzzyPositionsList,
+						Time:               time.Now().Format(time.RFC3339),
+						Attempts:           phraseNumber,
+						ChecksumTests:      atomic.LoadInt64(&checksumTestCount),
+						Duration:           formatDuration(totalTime),
+						Rate:               fmt.Sprintf("%.0f phrases/sec", finalPhraseRate),
+					}
+
+					if err := saveResult(result); err != nil {
+						fmt.Printf("❌ Erreur sauvegarde: %v\n", err)
+					} else {
+						fmt.Println("💾 Résultat sauvé dans epic_win_result.json")
+					}
+
+					os.Exit(0)
+				}
+			}
+
+			localAttempts++ // Compter localement pour réduire la contention
+
+			// Batch update des compteurs atomiques pour réduire la contention
+			if localAttempts%UPDATE_BATCH_SIZE == 0 {
+				atomic.AddInt64(&attemptCount, UPDATE_BATCH_SIZE)
+				atomic.AddInt64(&checksumTestCount, localChecksumTests)
+				localAttempts = 0
+				localChecksumTests = 0
+			}
+
+			// Clear phrase23Words for next iteration
+			for j := range phrase23Words {
+				phrase23Words[j] = ""
+			}
+		}
+	}
+
+	// Mise à jour finale des compteurs restants
+	if localAttempts > 0 {
+		atomic.AddInt64(&attemptCount, localAttempts)
+		atomic.AddInt64(&checksumTestCount, localChecksumTests)
+	}
 }
 
 func worker(workChan <-chan WorkItem, wg *sync.WaitGroup) {
@@ -1376,6 +1650,166 @@ func worker(workChan <-chan WorkItem, wg *sync.WaitGroup) {
 	}
 }
 
+// generateAllCombinationsBatch generates combinations in batches for massive parallelism
+func generateAllCombinationsBatch(workChan chan<- BatchWorkItem, reverseWords map[string]int, batchSize int) {
+	defer close(workChan)
+
+	var phraseNumber int64 = 0
+	currentBatch := make([][]int, 0, batchSize)
+
+	// Fonction pour envoyer un lot
+	sendBatch := func() {
+		if len(currentBatch) > 0 {
+			batch := BatchWorkItem{
+				phrases:     make([][]int, len(currentBatch)),
+				startNumber: phraseNumber - int64(len(currentBatch)),
+			}
+
+			// Copy phrases to avoid race conditions
+			for i, phrase := range currentBatch {
+				batch.phrases[i] = make([]int, len(phrase))
+				copy(batch.phrases[i], phrase)
+			}
+
+			select {
+			case workChan <- batch:
+			case <-time.After(5 * time.Millisecond):
+				// Force send très rapidement - pas de patience !
+				select {
+				case workChan <- batch:
+				default:
+					// Si toujours bloqué, forcer quand même (mode ultra-agressif)
+					workChan <- batch
+				}
+			}
+
+			// Reset batch
+			currentBatch = currentBatch[:0]
+		}
+	}
+
+	// Fonction récursive pour générer toutes les combinaisons (optimisée)
+	var generateFromPosition func(position int, currentPhrase []int, usedWords map[string]bool, phraseWordsBuffer []string)
+	generateFromPosition = func(position int, currentPhrase []int, usedWords map[string]bool, phraseWordsBuffer []string) {
+		if atomic.LoadInt32(&foundResult) == 1 {
+			return
+		}
+
+		if position == 23 {
+			// Vérifier s'il y a des mots dupliqués - skip si c'est le cas (sauf si désactivé)
+			if !*skipDuplicateCheck {
+				for i, bits := range currentPhrase {
+					phraseWordsBuffer[i] = bitsToWord(bits, wordList)
+				}
+				if hasDuplicateWords(phraseWordsBuffer) {
+					return // Skip cette phrase
+				}
+			}
+
+			phraseNumber++
+
+			// Ajouter au lot actuel
+			phraseCopy := make([]int, 23)
+			copy(phraseCopy, currentPhrase)
+			currentBatch = append(currentBatch, phraseCopy)
+
+			// Envoyer le lot si plein
+			if len(currentBatch) >= batchSize {
+				sendBatch()
+			}
+			return
+		}
+
+		// Obtenir les mots disponibles pour cette position
+		var availableWords []string
+		if *fuzzyMode && contains(fuzzyPositionsList, position) {
+			// Mode fuzzy : utiliser toute la wordlist sauf les mots déjà utilisés et checksum words
+			availableWords = getStringSlice()
+			for _, word := range wordList {
+				if !usedWords[word] {
+					// Vérifier que ce n'est pas un checksum word
+					isChecksum := false
+					for _, checksumWord := range CHECKSUM_WORDS {
+						if word == checksumWord {
+							isChecksum = true
+							break
+						}
+					}
+					if !isChecksum {
+						availableWords = append(availableWords, word)
+					}
+				}
+			}
+		} else if *fuzzyLtdMode && contains(fuzzyLtdPositionsList, position) {
+			// Mode fuzzy-ltd : utiliser les mots du livre convertis en anglais
+			availableWords = getStringSlice()
+			for _, word := range frenchToEnglishWords {
+				if !usedWords[word] {
+					// Vérifier que ce n'est pas un checksum word
+					isChecksum := false
+					for _, checksumWord := range CHECKSUM_WORDS {
+						if word == checksumWord {
+							isChecksum = true
+							break
+						}
+					}
+					if !isChecksum {
+						availableWords = append(availableWords, word)
+					}
+				}
+			}
+		} else {
+			// Mode normal : utiliser les candidats pré-traités
+			candidates := preprocessedWordCandidates[position]
+			availableWords = getStringSlice()
+			for _, word := range candidates {
+				if !usedWords[word] {
+					availableWords = append(availableWords, word)
+				}
+			}
+		}
+
+		// Si aucun mot disponible, cette branche s'arrête
+		if len(availableWords) == 0 {
+			putStringSlice(availableWords)
+			return
+		}
+
+		for _, word := range availableWords {
+			wordBits := wordToBits(word, reverseWords)
+			if wordBits == -1 {
+				continue // Skip invalid words
+			}
+
+			currentPhrase[position] = wordBits
+
+			// Optimisation : réutiliser la map usedWords au lieu de la copier
+			usedWords[word] = true
+			generateFromPosition(position+1, currentPhrase, usedWords, phraseWordsBuffer)
+			delete(usedWords, word) // Nettoyer après récursion
+		}
+
+		putStringSlice(availableWords)
+	}
+
+	fmt.Printf("🚀 Démarrage de la génération par lots ULTRA-RAPIDE (taille: %d)\n", batchSize)
+
+	// Pré-allouer des buffers pour éviter les allocations répétées
+	currentPhraseWords := make([]string, 23)
+
+	// Configuration ultra-agressive pour la génération
+	runtime.GC() // Nettoyer avant de commencer
+
+	// Démarrer la génération récursive
+	currentPhrase := make([]int, 23)
+	usedWords := getUsedWordsMap()
+	generateFromPosition(0, currentPhrase, usedWords, currentPhraseWords)
+	putUsedWordsMap(usedWords)
+
+	// Envoyer le dernier lot s'il n'est pas vide
+	sendBatch()
+}
+
 func generateAllCombinations(workChan chan<- WorkItem, reverseWords map[string]int) {
 	defer close(workChan)
 
@@ -1389,8 +1823,8 @@ func generateAllCombinations(workChan chan<- WorkItem, reverseWords map[string]i
 		}
 
 		if position == 23 {
-			// Vérifier s'il y a des mots dupliqués - skip si c'est le cas
-			if hasDuplicateWords(currentPhrase) {
+			// Vérifier s'il y a des mots dupliqués - skip si c'est le cas (sauf si désactivé)
+			if !*skipDuplicateCheck && hasDuplicateWords(currentPhrase) {
 				return // Skip cette phrase
 			}
 
@@ -1661,8 +2095,13 @@ func processJSONFile(jsonPath string, positions []int, reverseWords map[string]i
 		atomic.StoreInt32(&foundResult, 0)
 		atomic.StoreInt32(&bestScore, 0)
 		savedHighScores = make(map[string]bool)
-		startTime = time.Now()
-		lastLogTime = startTime
+
+		// Réinitialiser correctement les temps
+		now := time.Now()
+		startTime = now
+		lastLogTime = now
+
+		fmt.Printf("⏰ Timer réinitialisé à %v\n", startTime.Format("15:04:05"))
 
 		// Run the main processing logic
 		err = runMainProcessing(reverseWords)
@@ -1691,6 +2130,13 @@ func processJSONFile(jsonPath string, positions []int, reverseWords map[string]i
 
 // runMainProcessing contains the main processing logic extracted from main()
 func runMainProcessing(reverseWords map[string]int) error {
+	// Initialiser les temps si pas déjà fait
+	if startTime.IsZero() {
+		now := time.Now()
+		startTime = now
+		lastLogTime = now
+		fmt.Printf("⏰ Timer initialisé dans runMainProcessing à %v\n", startTime.Format("15:04:05"))
+	}
 	var finalWordCandidates [][]string
 
 	if *englishMode {
@@ -1813,31 +2259,142 @@ func runMainProcessing(reverseWords map[string]int) error {
 	// Démarrer le logger de performance en arrière-plan
 	go performanceLogger()
 
-	// Configuration des workers avec canal optimisé
-	workChan := make(chan WorkItem, channelSize)
-	var wg sync.WaitGroup
+	// **MODE PARALLÉLISME MASSIF**
+	if *massiveParallelism {
+		fmt.Println("🔥 MODE PARALLÉLISME MASSIF ACTIVÉ - UTILISATION CPU MAXIMALE")
 
-	// Démarrer les workers
-	for i := 0; i < numWorkers; i++ {
-		wg.Add(1)
-		go worker(workChan, &wg)
+		// **CONFIGURATION ULTRA-AGRESSIVE POUR PERFORMANCE MAXIMALE**
+
+		// Utiliser BEAUCOUP plus de workers pour saturer complètement le CPU
+		optimalWorkers := numCPU * 8 // 8x plus de workers pour saturer totalement
+		if numCPU >= 32 {
+			optimalWorkers = numCPU * 6 // Un peu moins pour les très gros CPU pour éviter overhead
+		}
+		if numCPU >= 64 {
+			optimalWorkers = numCPU * 4 // Encore moins pour les CPU énormes
+		}
+
+		// Pas de limite arbitraire - laisser Go gérer
+		if optimalWorkers > 2000 {
+			optimalWorkers = 2000 // Cap raisonnable pour éviter les problèmes OS
+		}
+
+		// Batch size plus petit pour meilleure répartition de charge
+		batchSize := 50 // Plus petit = meilleure répartition
+		if numCPU >= 32 {
+			batchSize = 25 // Encore plus petit pour gros CPU
+		}
+		if numCPU >= 64 {
+			batchSize = 10 // Très petit pour CPU énormes
+		}
+
+		// Canal ÉNORME pour éviter tout blocage
+		batchChannelSize := optimalWorkers * 10 // 10x plus grand
+
+		fmt.Printf("💻 CPU cores détectés: %d\n", numCPU)
+		fmt.Printf("👷 Workers ULTRA-MASSIFS: %d (%.1fx CPU)\n", optimalWorkers, float64(optimalWorkers)/float64(numCPU))
+		fmt.Printf("📦 Batch size OPTIMISÉ: %d phrases/batch\n", batchSize)
+		fmt.Printf("📡 Canal ÉNORME: %d batches\n", batchChannelSize)
+
+		// **CONFIGURATION GC ANTI-DÉGRADATION**
+		// Désactiver complètement le GC automatique pour éviter les pauses
+		debug.SetGCPercent(-1) // Désactiver GC automatique
+
+		// Démarrer un GC manuel contrôlé en arrière-plan
+		go func() {
+			ticker := time.NewTicker(30 * time.Second) // GC manuel toutes les 30s
+			defer ticker.Stop()
+			for range ticker.C {
+				if atomic.LoadInt32(&foundResult) == 1 {
+					return
+				}
+				runtime.GC() // GC forcé mais contrôlé
+				runtime.GC() // Double GC pour bien nettoyer
+			}
+		}()
+
+		// Configuration runtime pour performance maximale
+		runtime.GOMAXPROCS(numCPU) // Utiliser TOUS les cores
+
+		// Optimisations mémoire supplémentaires
+		debug.SetMemoryLimit(1 << 30) // Limite à 1GB pour éviter le swap
+
+		fmt.Printf("🚀 Configuration ULTRA-PERFORMANCE activée\n")
+		fmt.Printf("🔥 Ratio workers/CPU: %.1fx (recommandé: >4x pour saturation)\n", float64(optimalWorkers)/float64(numCPU))
+
+		if *skipDuplicateCheck {
+			fmt.Printf("⚡ Check des doublons DÉSACTIVÉ pour performance maximale\n")
+		} else {
+			fmt.Printf("🔍 Check des doublons activé (utiliser -no-dup-check pour plus de vitesse)\n")
+		}
+
+		// Initialiser les pools avec plus d'objets pour éviter les allocations
+		fmt.Printf("🏊 Pré-remplissage des pools anti-GC...\n")
+		initializePools()
+		fmt.Printf("✅ Pools initialisés - mémoire pré-allouée\n")
+
+		// Canal de batch work
+		batchWorkChan := make(chan BatchWorkItem, batchChannelSize)
+		var wg sync.WaitGroup
+
+		// Démarrer les batch workers
+		for i := 0; i < optimalWorkers; i++ {
+			wg.Add(1)
+			go batchWorker(i, batchWorkChan, &wg)
+		}
+
+		fmt.Println("🏁 Début du traitement par LOTS MASSIFS...")
+		if *fuzzyMode {
+			fmt.Printf("🔍 Mode fuzzy : positions %v utiliseront toute la wordlist\n", fuzzyPositionsList)
+		}
+		if *fuzzyLtdMode {
+			fmt.Printf("📖 Mode fuzzy-ltd : positions %v utiliseront les %d mots du livre\n", fuzzyLtdPositionsList, len(frenchToEnglishWords))
+		}
+
+		fmt.Println("══════════════════════════════════════════════════")
+
+		// Générer et envoyer les combinaisons par lots
+		go generateAllCombinationsBatch(batchWorkChan, reverseWords, batchSize)
+
+		// Attendre que tous les workers terminent
+		wg.Wait()
+
+	} else {
+		// Mode normal (legacy)
+		fmt.Println("🔧 Mode parallélisme NORMAL")
+
+		if *skipDuplicateCheck {
+			fmt.Printf("⚡ Check des doublons DÉSACTIVÉ pour performance maximale\n")
+		} else {
+			fmt.Printf("🔍 Check des doublons activé (utiliser -no-dup-check pour plus de vitesse)\n")
+		}
+
+		// Configuration des workers avec canal optimisé
+		workChan := make(chan WorkItem, channelSize)
+		var wg sync.WaitGroup
+
+		// Démarrer les workers
+		for i := 0; i < numWorkers; i++ {
+			wg.Add(1)
+			go worker(workChan, &wg)
+		}
+
+		fmt.Println("🏁 Début du traitement parallélisé...")
+		if *fuzzyMode {
+			fmt.Printf("🔍 Mode fuzzy : positions %v utiliseront toute la wordlist\n", fuzzyPositionsList)
+		}
+		if *fuzzyLtdMode {
+			fmt.Printf("📖 Mode fuzzy-ltd : positions %v utiliseront les %d mots du livre\n", fuzzyLtdPositionsList, len(frenchToEnglishWords))
+		}
+
+		fmt.Println("══════════════════════════════════════════════════")
+
+		// Générer et envoyer les combinaisons aux workers
+		go generateAllCombinations(workChan, reverseWords)
+
+		// Attendre que tous les workers terminent
+		wg.Wait()
 	}
-
-	fmt.Println("🏁 Début du traitement parallélisé...")
-	if *fuzzyMode {
-		fmt.Printf("🔍 Mode fuzzy : positions %v utiliseront toute la wordlist\n", fuzzyPositionsList)
-	}
-	if *fuzzyLtdMode {
-		fmt.Printf("📖 Mode fuzzy-ltd : positions %v utiliseront les %d mots du livre\n", fuzzyLtdPositionsList, len(frenchToEnglishWords))
-	}
-
-	fmt.Println("══════════════════════════════════════════════════")
-
-	// Générer et envoyer les combinaisons aux workers
-	go generateAllCombinations(workChan, reverseWords)
-
-	// Attendre que tous les workers terminent
-	wg.Wait()
 
 	// Si on arrive ici, aucune phrase valide n'a été trouvée
 	duration := time.Since(startTime)
@@ -1922,6 +2479,9 @@ func main() {
 		fmt.Fprintf(os.Stderr, "  -word_valid=\"W1,W2\"\tComma-separated words that must remain valid\n")
 		fmt.Fprintf(os.Stderr, "\nJSON Mode Options:\n")
 		fmt.Fprintf(os.Stderr, "  -json-dir=PATH\t\tDirectory containing JSON files with wordCandidates\n")
+		fmt.Fprintf(os.Stderr, "\nPerformance Options:\n")
+		fmt.Fprintf(os.Stderr, "  -massive\t\t\tEnable massive parallelism mode with batch processing\n")
+		fmt.Fprintf(os.Stderr, "  -no-dup-check\t\t\tSkip duplicate word checking for maximum performance\n")
 		fmt.Fprintf(os.Stderr, "\nExamples:\n")
 		fmt.Fprintf(os.Stderr, "  %s\t\t\t\t\t\tFrench mode (default)\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -eng\t\t\t\t\tEnglish mode\n", os.Args[0])
@@ -1930,6 +2490,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "  %s -eng -f -pos=7,10,20\t\t\tEnglish + Fuzzy mode on positions 7, 10, and 20\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s --fuzzy-ltd -p=20,21\t\t\tFuzzy-ltd mode using book words on positions 20 and 21\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -json-dir=./test\t\t\t\tProcess all JSON files in ./test directory\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "  %s -massive\t\t\t\t\tUse massive parallelism for maximum performance\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "  %s -massive -no-dup-check\t\t\tUltra-fast mode (massive parallelism + no duplicate check)\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -bits -phrase=\"word1 word2 ...\" -word_target=flip -word_valid=\"alien,detect\"\n", os.Args[0])
 	}
 	flag.Parse()
